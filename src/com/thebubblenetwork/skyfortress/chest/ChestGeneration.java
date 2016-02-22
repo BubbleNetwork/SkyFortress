@@ -14,11 +14,11 @@ import java.util.List;
  * Created February 2016
  */
 public class ChestGeneration {
-    private Type type;
+    private ChestType type;
     private ItemGen gen;
     private List<ItemStack[]> pregen = new ArrayList<>();
 
-    public ChestGeneration(Type type,ItemGen gen,int uses){
+    public ChestGeneration(ChestType type, ItemGen gen, int uses){
         this.type = type;
         this.gen = gen;
         gen(uses);
@@ -48,7 +48,7 @@ public class ChestGeneration {
         return gen;
     }
 
-    public Type getType(){
+    public ChestType getType(){
         return type;
     }
 
@@ -56,16 +56,4 @@ public class ChestGeneration {
         return getType().getSize();
     }
 
-    enum Type{
-        SINGLE(3),DOUBLE(6);
-        private int size;
-
-        Type(int rows){
-            size = rows*9;
-        }
-
-        public int getSize() {
-            return size;
-        }
-    }
 }

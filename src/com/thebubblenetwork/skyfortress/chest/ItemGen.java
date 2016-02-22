@@ -9,5 +9,5 @@ import org.bukkit.inventory.ItemStack;
  * Created February 2016
  */
 public interface ItemGen {
-    ItemStack[] generate(ChestGeneration.Type type);
+    ItemStack[] generate(ChestType type);
 }

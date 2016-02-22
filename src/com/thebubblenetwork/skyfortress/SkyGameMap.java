@@ -7,10 +7,7 @@ import com.thebubblenetwork.api.game.maps.MapData;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * The Bubble Network 2016
@@ -26,19 +23,27 @@ public class SkyGameMap extends GameMap{
     @SuppressWarnings("unchecked")
     public Map loadSetting(ConfigurationSection configurationSection) {
         Map map = new HashMap<>();
-        Set<LocationObject> spawns = new HashSet<>();
-        for(String section:configurationSection.getConfigurationSection("spawns").getKeys(false)){
-            spawns.add(LocationUtil.fromConfig(configurationSection.getConfigurationSection("spawns." + section)));
+
+        List<SkyIsland> islands = new ArrayList<>();
+        for(String island:configurationSection.getConfigurationSection("islands").getKeys(false)){
+            String section = "islands." + island;
+            LocationObject spawn = LocationUtil.fromConfig(configurationSection.getConfigurationSection(section + ".spawn"));
+            Set<LocationObject> chests = new HashSet<>();
+            for(String chest:configurationSection.getConfigurationSection(section + ".chests").getKeys(false)){
+                chests.add(LocationUtil.fromConfig(configurationSection.getConfigurationSection(section + ".chests." + chest)));
+            }
+            islands.add(new SkyIsland(chests,spawn));
         }
+        map.put("islands",islands);
+
         LocationObject crownlocation = LocationUtil.fromConfig(configurationSection.getConfigurationSection("crown"));
-        map.put("spawns",spawns);
         map.put("crown",crownlocation);
+
         return map;
     }
-
     @SuppressWarnings("unchecked")
-    public Set<LocationObject> getSpawns(){
-        return (Set<LocationObject>) getSettings().get("spawns");
+    public List<SkyIsland> getIslands(){
+        return (List<SkyIsland>) getSettings().get("islands");
     }
 
     @SuppressWarnings("unchecked")

@@ -1,5 +1,5 @@
 .idea
 target
 out
-SkyFortress.iml
 *.iml
+src/META-INF
