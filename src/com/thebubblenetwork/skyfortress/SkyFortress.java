@@ -1,6 +1,5 @@
 package com.thebubblenetwork.skyfortress;
 
-import com.thebubblenetwork.api.framework.util.mc.items.EnchantGlow;
 import com.thebubblenetwork.api.framework.util.mc.items.ItemStackBuilder;
 import com.thebubblenetwork.api.framework.util.mc.scoreboard.BoardPreset;
 import com.thebubblenetwork.api.game.BubbleGameAPI;
@@ -12,7 +11,9 @@ import com.thebubblenetwork.skyfortress.chest.ChestType;
 import com.thebubblenetwork.skyfortress.chest.util.SpawnChest;
 import com.thebubblenetwork.skyfortress.crown.CrownItem;
 import com.thebubblenetwork.skyfortress.kit.DefaultKit;
+import com.thebubblenetwork.skyfortress.mobai.CreatureAI;
 import com.thebubblenetwork.skyfortress.mobai.MobManager;
+import com.thebubblenetwork.skyfortress.mobai.ai.WitherGuards;
 import com.thebubblenetwork.skyfortress.scoreboard.SkyFortressBoard;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -44,7 +45,8 @@ public class SkyFortress extends BubbleGameAPI{
     private SkyFortressBoard board = new SkyFortressBoard();
     private MobManager manager = new MobManager();
     private Set<ChestGeneration> pregens = new HashSet<>();
-    private CrownItem item;
+    private CrownItem item = null;
+    private WitherGuards guards = null;
 
     public SkyFortress() {
         super("SkyFortress", GameMode.SURVIVAL, "Default Kit", 1);
@@ -52,7 +54,11 @@ public class SkyFortress extends BubbleGameAPI{
     }
 
     public void cleanup() {
-
+        if(item != null)item.cancel();
+        pregens.clear();
+        for(CreatureAI ai:manager.getCreatureAIs()){
+            ai.remove();
+        }
     }
 
     public void onStateChange(State oldstate, State newstate) {
@@ -75,12 +81,12 @@ public class SkyFortress extends BubbleGameAPI{
     }
 
     public GameMap loadMap(String s, MapData mapData, File file, File file1) {
-        return new SkyGameMap(s,mapData,file,file1);
+        return new SkyFortressMap(s,mapData,file,file1);
     }
 
     public void teleportPlayers(GameMap gameMap, World world) {
-        if(!(gameMap instanceof SkyGameMap))throw new IllegalArgumentException("Invalid map");
-        SkyGameMap map = (SkyGameMap)gameMap;
+        if(!(gameMap instanceof SkyFortressMap))throw new IllegalArgumentException("Invalid map");
+        SkyFortressMap map = (SkyFortressMap)gameMap;
         Iterator<ChestGeneration> chestGenerationIterator = pregens.iterator();
         Iterator<? extends Player> playerIterator = Bukkit.getOnlinePlayers().iterator();
         for(SkyIsland island:map.getIslands()){
@@ -91,6 +97,7 @@ public class SkyFortress extends BubbleGameAPI{
             island.fillChests(world,generation);
             p.teleport(island.getSpawn().toLocation(world));
         }
+        guards = new WitherGuards(world,map.getGuardLocations());
         item = new CrownItem(new ItemStackBuilder(Material.GOLD_HELMET).withUnbreaking(true).withEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL).build(),map.getCrownLocation().toLocation(world)) {
             public boolean pickup(Player p) {
                 return !getGame().isSpectating(p);

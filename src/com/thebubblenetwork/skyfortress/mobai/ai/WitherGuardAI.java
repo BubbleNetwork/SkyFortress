@@ -9,8 +9,10 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Skeleton;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
@@ -93,7 +95,16 @@ public class WitherGuardAI extends CreatureAI<Skeleton>{
     }
 
     public void onDamage(EntityDamageEvent e) {
-
+        if(e instanceof EntityDamageByEntityEvent){
+            if(e instanceof Creature){
+                e.setCancelled(true);
+                return;
+            }
+        }
+        if(e.getCause() == EntityDamageEvent.DamageCause.VOID){
+            e.setCancelled(true);
+            remove();
+        }
     }
 
     public void onDeath(EntityDeathEvent e) {
