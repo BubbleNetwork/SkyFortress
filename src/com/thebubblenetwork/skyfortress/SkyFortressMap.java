@@ -15,8 +15,8 @@ import java.util.*;
  * 20/02/2016 {15:30}
  * Created February 2016
  */
-public class SkyGameMap extends GameMap{
-    public SkyGameMap(String name, MapData data, File yml, File zip) {
+public class SkyFortressMap extends GameMap{
+    public SkyFortressMap(String name, MapData data, File yml, File zip) {
         super(name, data, yml, zip);
     }
 
@@ -36,6 +36,12 @@ public class SkyGameMap extends GameMap{
         }
         map.put("islands",islands);
 
+        Set<LocationObject> guards = new HashSet<>();
+        for(String guard:configurationSection.getConfigurationSection("guards.wither").getKeys(false)){
+            guards.add(LocationUtil.fromConfig(configurationSection.getConfigurationSection("guards.wither." + guard)));
+        }
+        map.put("witherguards",guards);
+
         LocationObject crownlocation = LocationUtil.fromConfig(configurationSection.getConfigurationSection("crown"));
         map.put("crown",crownlocation);
 
@@ -44,6 +50,11 @@ public class SkyGameMap extends GameMap{
     @SuppressWarnings("unchecked")
     public List<SkyIsland> getIslands(){
         return (List<SkyIsland>) getSettings().get("islands");
+    }
+
+    @SuppressWarnings("unchecked")
+    public Set<LocationObject> getGuardLocations(){
+        return (Set<LocationObject>) getSettings().get("witherguards");
     }
 
     @SuppressWarnings("unchecked")
