@@ -1,5 +1,6 @@
 package com.thebubblenetwork.skyfortress.crown;
 
+import com.thebubblenetwork.skyfortress.SkyFortress;
 import org.bukkit.Location;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -25,6 +26,7 @@ public abstract class CrownItem implements Listener{
         }
         stack.setItemMeta(meta);
         item = spawn.getWorld().dropItem(spawn,stack);
+        SkyFortress.getInstance().registerListener(this);
     }
 
     @EventHandler

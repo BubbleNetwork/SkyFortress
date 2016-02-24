@@ -1,12 +1,13 @@
-package com.thebubblenetwork.skyfortress;
+package com.thebubblenetwork.skyfortress.map;
 
 import com.thebubblenetwork.api.framework.util.mc.world.LocationObject;
-import com.thebubblenetwork.skyfortress.chest.ChestGeneration;
+import com.thebubblenetwork.skyfortress.chest.PregeneratedChest;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.entity.Player;
 
 import java.util.Set;
 import java.util.logging.Level;
@@ -14,6 +15,7 @@ import java.util.logging.Level;
 public class SkyIsland {
     private LocationObject spawn;
     private Set<LocationObject> chests;
+    private Player ifassigned;
 
     public SkyIsland(Set<LocationObject> chests, LocationObject spawn) {
         this.chests = chests;
@@ -24,11 +26,19 @@ public class SkyIsland {
         return spawn;
     }
 
+    public Player getIfassigned() {
+        return ifassigned;
+    }
+
+    public void setIfassigned(Player ifassigned) {
+        this.ifassigned = ifassigned;
+    }
+
     public Set<LocationObject> getChests() {
         return chests;
     }
 
-    public void fillChests(World world, ChestGeneration generation){
+    public void fillChests(World world, PregeneratedChest generation){
         for(LocationObject object:getChests()){
             try {
                 Block b = object.toLocation(world).getBlock();

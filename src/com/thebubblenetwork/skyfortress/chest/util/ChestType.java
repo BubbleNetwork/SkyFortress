@@ -1,5 +1,5 @@
 package com.thebubblenetwork.skyfortress.chest.util;
 
-public enum Type {
+public enum ChestType {
     ARMOR,TOOL,OTHER;
 }

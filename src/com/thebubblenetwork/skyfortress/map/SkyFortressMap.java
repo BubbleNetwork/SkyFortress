@@ -1,4 +1,4 @@
-package com.thebubblenetwork.skyfortress;
+package com.thebubblenetwork.skyfortress.map;
 
 import com.thebubblenetwork.api.framework.util.mc.config.LocationUtil;
 import com.thebubblenetwork.api.framework.util.mc.world.LocationObject;

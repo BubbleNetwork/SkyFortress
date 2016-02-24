@@ -7,16 +7,16 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
 
-public class GenItem {
-    private Slot slot;
+public class ChestItem {
+    private ChestSlot slot;
     private float percent;
     private int stacksize[];
     private short data;
     private Material material;
-    private GenItem[] pairs;
+    private ChestItem[] pairs;
     private Map<Enchantment,Integer> enchantmentIntegerMap;
 
-    public GenItem(Slot slot, Map<Enchantment, Integer> enchantmentIntegerMap, GenItem[] pairs, Material material, int[] stacksize, short data, float percent) {
+    public ChestItem(ChestSlot slot, Map<Enchantment, Integer> enchantmentIntegerMap, ChestItem[] pairs, Material material, int[] stacksize, short data, float percent) {
         this.slot = slot;
         this.enchantmentIntegerMap = enchantmentIntegerMap;
         this.pairs = pairs;
@@ -46,7 +46,7 @@ public class GenItem {
         return material;
     }
 
-    public Slot getSlot() {
+    public ChestSlot getSlot() {
         return slot;
     }
 
@@ -54,7 +54,7 @@ public class GenItem {
         return percent;
     }
 
-    public GenItem[] getPairs() {
+    public ChestItem[] getPairs() {
         return pairs;
     }
 

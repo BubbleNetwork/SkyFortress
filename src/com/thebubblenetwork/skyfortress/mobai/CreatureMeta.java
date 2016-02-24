@@ -27,7 +27,7 @@ public class CreatureMeta implements Callable<Object> {
 
     public CreatureAI call(){
         try{
-            return SkyFortress.getInstance().getManager().getAI(getCreature());
+            return SkyFortress.getInstance().getMobManager().getAI(getCreature());
         }
         catch (Throwable ex){
             return null;
