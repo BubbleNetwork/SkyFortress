@@ -23,9 +23,12 @@ import java.util.UUID;
 public class SkyListener implements Listener{
 
 
-    private SkyFortress fortress = SkyFortress.getInstance();
-    private CapManager manager = fortress.getCapManager();
+    private SkyFortress fortress;
     private Map<UUID,Boolean> kingqueenmap = new HashMap<>();
+
+    public SkyListener(SkyFortress fortress){
+        this.fortress = fortress;
+    }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e){
@@ -37,16 +40,16 @@ public class SkyListener implements Listener{
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e){
         final Player died = e.getEntity();
-        if(manager.isCapped() && manager.getCapping() == died){
+        if(fortress.getCapManager().isCapped() && fortress.getCapManager().getCapping() == died){
             e.setKeepInventory(true);
             e.setKeepLevel(true);
-            manager.endCap(true);
+            fortress.getCapManager().endCap(true);
+            final World w = died.getWorld();
             new BubbleRunnable(){
                 public void run() {
                     died.spigot().respawn();
                     SkyIsland island = fortress.getIfAssigned(died);
                     if(island != null){
-                        World w = died.getWorld();
                         Location location = island.getSpawn().toLocation(w);
                         Block b = location.getBlock().getRelative(BlockFace.DOWN);
                         if(!b.getType().isSolid())b.setType(Material.DIRT);

@@ -29,6 +29,7 @@ public class CapManager {
 
     private Player capping = null;
     private ItemStack[] inventorycontent = null;
+    private ItemStack[] armorcontent = null;
 
     public boolean isCapped(){
         return capping != null;
@@ -41,6 +42,7 @@ public class CapManager {
         if(items) {
             PlayerInventory inventory = capping.getInventory();
             inventory.setContents(inventorycontent);
+            inventory.setArmorContents(armorcontent);
         }
         Messages.broadcastMessageTitle("", ChatColor.GOLD + getNick(capping) + ChatColor.YELLOW + " lost the crown!",new Messages.TitleTiming(5,20,15));
         SkyFortress.getInstance().resetCrown();
@@ -52,6 +54,7 @@ public class CapManager {
         capping = p;
         PlayerInventory inventory = p.getInventory();
         inventorycontent = inventory.getContents().clone();
+        armorcontent = inventory.getArmorContents().clone();
         int currentslot = inventory.getHeldItemSlot();
         inventory.clear();
         inventory.setArmorContents(new ItemStack[]{BOOTS.build(),LEGGINGS.build(),CHESTPLATE.build(),HELMET.build()});

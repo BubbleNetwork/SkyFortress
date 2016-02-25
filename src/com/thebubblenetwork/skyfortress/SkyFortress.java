@@ -47,17 +47,24 @@ public class SkyFortress extends BubbleGameAPI{
     }
 
     private SkyFortressBoard board;
-    private MobManager mobManager;
+    private MobManager mobManager = new MobManager();
     private Set<PregeneratedChest> pregens = new HashSet<>();
     private CrownItem item = null;
     private WitherGuardManager guards = null;
-    private CapManager capManager;
+    private CapManager capManager = new CapManager();
     private Set<SkyIsland> islands = null;
-    private SkyListener listener;
+    private SkyListener listener = new SkyListener(this);
 
     public SkyFortress() {
         super("SkyFortress", GameMode.SURVIVAL, "Default Kit", 1);
         instance = this;
+        board = new SkyFortressBoard();
+        for(int i = 0;i < getType().getMaxPlayers();i ++){
+            pregens.add(new PregeneratedChest(ChestType.SINGLE,new SpawnChestGeneration(),3));
+        }
+        capManager = new CapManager();
+        mobManager = new MobManager();
+        listener = new SkyListener(this);
     }
 
     public void cleanup() {
@@ -69,16 +76,6 @@ public class SkyFortress extends BubbleGameAPI{
     }
 
     public void onStateChange(State oldstate, State newstate) {
-        if(oldstate == null){
-            listener = new SkyListener();
-            capManager = new CapManager();
-            mobManager = new MobManager();
-            board = new SkyFortressBoard();
-            pregens.clear();
-            for(int i = 0;i < getType().getMaxPlayers();i ++){
-                pregens.add(new PregeneratedChest(ChestType.SINGLE,new SpawnChestGeneration(),3));
-            }
-        }
         if(newstate == State.LOBBY){
             KitManager.getKits().add(new DefaultKit());
         }
@@ -97,6 +94,8 @@ public class SkyFortress extends BubbleGameAPI{
 
     public void teleportPlayers(GameMap gameMap, World world) {
         if(!(gameMap instanceof SkyFortressMap))throw new IllegalArgumentException("Invalid map");
+        registerListener(getMobManager());
+        registerListener(getListener());
         SkyFortressMap map = (SkyFortressMap)gameMap;
         Iterator<PregeneratedChest> chestGenerationIterator = pregens.iterator();
         Iterator<? extends Player> playerIterator = Bukkit.getOnlinePlayers().iterator();
@@ -161,6 +160,10 @@ public class SkyFortress extends BubbleGameAPI{
                 return false;
             }
         };
+    }
+
+    public SkyListener getListener() {
+        return listener;
     }
 
     public CrownItem getItem() {

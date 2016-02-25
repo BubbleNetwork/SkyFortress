@@ -31,9 +31,9 @@ public class WitherGuardManager extends GameTimer{
     }
 
     public void run(int i) {
-        if(BubbleGameAPI.getInstance().getState() != BubbleGameAPI.State.INGAME){
+        if((BubbleGameAPI.getInstance().getState() != BubbleGameAPI.State.INGAME && BubbleGameAPI.getInstance().getState() != BubbleGameAPI.State.PREGAME) || positionSet == null){
             cancel();
-            end();
+            return;
         }
         for(GuardPosition position:getPositionSet()){
             try {
@@ -45,6 +45,6 @@ public class WitherGuardManager extends GameTimer{
     }
 
     public void end(){
-        positionSet = null;
+
     }
 }

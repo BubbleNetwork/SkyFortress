@@ -1,5 +1,5 @@
 name: SkyFortress
 version: 1
-main: com.thebubblenetwork.skyfortress
+main: com.thebubblenetwork.skyfortress.SkyFortress
 authors: [ExtendObject]
 priority: 80
