@@ -1,11 +1,13 @@
 package com.thebubblenetwork.skyfortress;
 
+import com.thebubblenetwork.api.framework.BubbleNetwork;
 import com.thebubblenetwork.api.framework.util.mc.items.ItemStackBuilder;
 import com.thebubblenetwork.api.framework.util.mc.scoreboard.BoardPreset;
 import com.thebubblenetwork.api.game.BubbleGameAPI;
 import com.thebubblenetwork.api.game.kit.KitManager;
 import com.thebubblenetwork.api.game.maps.GameMap;
 import com.thebubblenetwork.api.game.maps.MapData;
+import com.thebubblenetwork.api.global.bubblepackets.messaging.messages.handshake.JoinableUpdate;
 import com.thebubblenetwork.skyfortress.chest.PregeneratedChest;
 import com.thebubblenetwork.skyfortress.chest.ChestType;
 import com.thebubblenetwork.skyfortress.chest.util.SpawnChestGeneration;
@@ -27,9 +29,11 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.logging.Level;
 
 /**
  * The Bubble Network 2016
@@ -76,6 +80,11 @@ public class SkyFortress extends BubbleGameAPI{
     }
 
     public void onStateChange(State oldstate, State newstate) {
+        try {
+            BubbleNetwork.getInstance().getPacketHub().sendMessage(BubbleNetwork.getInstance().getProxy(),new JoinableUpdate(newstate == State.LOBBY));
+        } catch (IOException e) {
+            BubbleNetwork.getInstance().getPlugin().getLogger().log(Level.WARNING,"Could not send joinable update for skyfortress",e);
+        }
         if(newstate == State.LOBBY){
             KitManager.getKits().add(new DefaultKit());
         }
