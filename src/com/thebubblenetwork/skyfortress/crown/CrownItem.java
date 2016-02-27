@@ -1,6 +1,7 @@
 package com.thebubblenetwork.skyfortress.crown;
 
 import com.thebubblenetwork.skyfortress.SkyFortress;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -16,7 +17,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.Collections;
 
 public abstract class CrownItem implements Listener{
-
     private Item item;
 
     public CrownItem (ItemStack stack, Location spawn){
@@ -31,7 +31,7 @@ public abstract class CrownItem implements Listener{
 
     @EventHandler
     public void onPickup(PlayerPickupItemEvent e){
-        if(e.getItem() == getItem()){
+        if(e.getItem().getUniqueId() == getItem().getUniqueId()){
             e.setCancelled(true);
         }
     }
@@ -50,14 +50,17 @@ public abstract class CrownItem implements Listener{
     public abstract boolean pickup(Player p);
 
     public void cancel(){
-        if(item != null)item.remove();
+        if(item != null){
+            item.teleport(new Location(Bukkit.getWorld("world"),0,-1,0));
+            item.remove();
+        }
         item = null;
         HandlerList.unregisterAll(this);
     }
 
     @EventHandler
     public void onItemDespawn(ItemDespawnEvent e){
-        if(e.getEntity() == getItem())e.setCancelled(true);
+        if(e.getEntity().getUniqueId() == getItem().getUniqueId())e.setCancelled(true);
     }
 
     public Item getItem() {

@@ -3,7 +3,9 @@ package com.thebubblenetwork.skyfortress.crown;
 import com.thebubblenetwork.api.framework.BukkitBubblePlayer;
 import com.thebubblenetwork.api.framework.messages.Messages;
 import com.thebubblenetwork.api.framework.util.mc.items.ItemStackBuilder;
+import com.thebubblenetwork.api.game.scoreboard.GameBoard;
 import com.thebubblenetwork.skyfortress.SkyFortress;
+import com.thebubblenetwork.skyfortress.scoreboard.SkyFortressBoard;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -28,6 +30,7 @@ public class CapManager {
     private static ItemStackBuilder SWORD = new ItemStackBuilder(Material.GOLD_SWORD).withUnbreaking(true).withEnchantment(Enchantment.DAMAGE_ALL,1);
 
     private Player capping = null;
+    private CapTimer timer;
     private ItemStack[] inventorycontent = null;
     private ItemStack[] armorcontent = null;
 
@@ -39,6 +42,7 @@ public class CapManager {
         getCapping();
         capping.removePotionEffect(SLOWNESS.getType());
         capping.removePotionEffect(STRENGTH.getType());
+        timer.cancel();
         if(items) {
             PlayerInventory inventory = capping.getInventory();
             inventory.setContents(inventorycontent);
@@ -47,11 +51,13 @@ public class CapManager {
         Messages.broadcastMessageTitle("", ChatColor.GOLD + getNick(capping) + ChatColor.YELLOW + " lost the crown!",new Messages.TitleTiming(5,20,15));
         SkyFortress.getInstance().resetCrown();
         nullThis();
+        updateScoreboards();
     }
 
     public void startCap(Player p){
         if(isCapped())throw new IllegalArgumentException("Already capped");
         capping = p;
+        timer = new CapTimer();
         PlayerInventory inventory = p.getInventory();
         inventorycontent = inventory.getContents().clone();
         armorcontent = inventory.getArmorContents().clone();
@@ -62,6 +68,16 @@ public class CapManager {
         p.addPotionEffects(Arrays.asList(SLOWNESS,STRENGTH));
         Messages.broadcastMessageTitle("", ChatColor.GOLD + getNick(p) + ChatColor.YELLOW + " is now king!",new Messages.TitleTiming(5,20,15));
         SkyFortress.getInstance().getItem().cancel();
+    }
+
+    public CapTimer getTimer() {
+        return timer;
+    }
+
+    public void updateScoreboards(){
+        for(GameBoard board: GameBoard.getBoards()){
+            SkyFortress.getInstance().getBoard().updateAll(board,this,getTimer());
+        }
     }
 
     private static String getNick(Player p){
@@ -77,8 +93,14 @@ public class CapManager {
         return capping;
     }
 
+    public String getCappingName(){
+        return getNick(getCapping());
+    }
+
     protected void nullThis(){
         capping = null;
         inventorycontent = null;
+        armorcontent = null;
+        timer = null;
     }
 }

@@ -4,6 +4,7 @@ import com.thebubblenetwork.api.framework.plugin.BubbleRunnable;
 import com.thebubblenetwork.api.game.BubbleGameAPI;
 import com.thebubblenetwork.skyfortress.SkyFortress;
 import com.thebubblenetwork.skyfortress.crown.CapManager;
+import com.thebubblenetwork.skyfortress.map.SkyFortressMap;
 import com.thebubblenetwork.skyfortress.map.SkyIsland;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -24,23 +25,16 @@ public class SkyListener implements Listener{
 
 
     private SkyFortress fortress;
-    private Map<UUID,Boolean> kingqueenmap = new HashMap<>();
 
     public SkyListener(SkyFortress fortress){
         this.fortress = fortress;
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent e){
-        if(fortress.getState() == BubbleGameAPI.State.LOBBY){
-            Player p = e.getPlayer();
-        }
-    }
-
-    @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e){
         final Player died = e.getEntity();
         if(fortress.getCapManager().isCapped() && fortress.getCapManager().getCapping() == died){
+            e.setDeathMessage(null);
             e.setKeepInventory(true);
             e.setKeepLevel(true);
             fortress.getCapManager().endCap(true);
@@ -55,6 +49,24 @@ public class SkyListener implements Listener{
                         if(!b.getType().isSolid())b.setType(Material.DIRT);
                         died.teleport(location);
                     }
+                }
+            }.runTask(SkyFortress.getInstance());
+        }
+        else{
+            e.setKeepInventory(false);
+            e.setKeepLevel(false);
+            e.setNewExp(0);
+            final Location l =
+                    died.getLocation().getBlockY() > 0
+                    ?
+                    died.getLocation()
+                    :
+                    ((SkyFortressMap)SkyFortress.getInstance().getChosenGameMap()).getCrownLocation().toLocation(SkyFortress.getInstance().getChosen());
+            new BubbleRunnable(){
+                public void run() {
+                    died.spigot().respawn();
+                    SkyFortress.getInstance().getGame().setSpectating(died,true);
+                    died.teleport(l);
                 }
             }.runTask(SkyFortress.getInstance());
         }

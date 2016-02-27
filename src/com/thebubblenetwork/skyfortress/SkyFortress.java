@@ -145,6 +145,8 @@ public class SkyFortress extends BubbleGameAPI{
         return guards;
     }
 
+
+
     public CapManager getCapManager() {
         return capManager;
     }
