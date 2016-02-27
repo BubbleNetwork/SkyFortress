@@ -20,10 +20,6 @@ public class SkyFortressMap extends GameMap{
         super(name, data, yml, zip);
     }
 
-    public SkyFortressMap(){
-        super();
-    }
-
     @SuppressWarnings("unchecked")
     public Map loadSetting(ConfigurationSection configurationSection) {
         Map map = new HashMap<>();
