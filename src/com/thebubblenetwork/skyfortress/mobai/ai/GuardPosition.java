@@ -28,7 +28,7 @@ public class GuardPosition implements GuardAI.DeathListener{
 
     public boolean isGuarded(){
         double diff;
-        return getGuardposition().toVector().distance(guardAI.getCreature().getLocation().toVector()) < 10 && (diff = getGuardposition().getY() - guardAI.getCreature().getLocation().getY()) < 2 && diff > -2;
+        return getGuardposition().toVector().distance(guardAI.getCreature().getLocation().toVector()) < 15 && (diff = getGuardposition().getY() - guardAI.getCreature().getLocation().getY()) < 2 && diff > -2;
     }
 
     public boolean isSafe(){
@@ -41,7 +41,6 @@ public class GuardPosition implements GuardAI.DeathListener{
     }
 
     public void findPlayer(){
-        guardAI.getCreature().setAngry(true);
         double distancesquared = Double.MAX_VALUE;
         double temp;
         Player selected = null;
@@ -59,13 +58,19 @@ public class GuardPosition implements GuardAI.DeathListener{
     }
 
     public void respawn(){
-        if (guardAI != null) guardAI.remove();
+        if (guardAI != null){
+            guardAI.deathListenerSet = null;
+            guardAI.remove();
+        }
         guardAI = new GuardAI(getGuardposition(), ChatColor.DARK_RED + ChatColor.BOLD.toString() + "Guard");
+        guardAI.deathListenerSet.add(this);
     }
 
-    public void guard() throws UnsafeException{
+    public void guard(){
         if(guardAI.isAlive()) {
-            if(!isGuarded())guardAI.getCreature().teleport(getGuardposition());
+            if(!isGuarded()){
+                guardAI.getCreature().teleport(getGuardposition());
+            }
             findPlayer();
         }
     }
@@ -73,14 +78,9 @@ public class GuardPosition implements GuardAI.DeathListener{
     public void onDeath(){
         new BubbleRunnable(){
             public void run() {
-                respawn();
+                if(isSafe())respawn();
+                else onDeath();
             }
         }.runTaskLater(SkyFortress.getInstance(), TimeUnit.SECONDS,RESPAWNTIME);
-    }
-
-    class UnsafeException extends Exception{
-        public UnsafeException(){
-            super();
-        }
     }
 }

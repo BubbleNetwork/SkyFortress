@@ -66,7 +66,9 @@ public class GuardAI extends CreatureAI<PigZombie>{
     }
 
     public void onTarget(EntityTargetEvent e) {
-        if(!(e.getTarget() instanceof Player) || SkyFortress.getInstance().getGame().isSpectating((Player)e.getTarget())){
+        if(!(e.getTarget() instanceof Player)
+                || SkyFortress.getInstance().getGame().isSpectating((Player)e.getTarget())
+                || e.getTarget().getLocation().distance(getCreature().getLocation()) > 15){
             e.setCancelled(true);
         }
     }
