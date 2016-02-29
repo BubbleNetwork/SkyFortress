@@ -1,6 +1,7 @@
-package com.thebubblenetwork.skyfortress.chest.util;
+package com.thebubblenetwork.skyfortress.chest.gen;
 
 import com.thebubblenetwork.api.framework.BubbleNetwork;
+import com.thebubblenetwork.api.framework.util.mc.items.ItemStackBuilder;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -27,7 +28,7 @@ public class ChestItem {
     }
 
     public ItemStack create(){
-        return new ItemStack(getMaterial(),getRandomStackSize(),getData());
+        return new ItemStackBuilder(getMaterial()).withAmount(getRandomStackSize()).withData(getData()).withEnchantments(getEnchantmentIntegerMap()).build();
     }
 
     public int getRandomStackSize(){

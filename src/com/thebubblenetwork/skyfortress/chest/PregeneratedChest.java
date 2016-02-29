@@ -1,6 +1,6 @@
 package com.thebubblenetwork.skyfortress.chest;
 
-import com.thebubblenetwork.skyfortress.chest.util.ChestGeneration;
+import com.thebubblenetwork.skyfortress.chest.gen.ChestGeneration;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;

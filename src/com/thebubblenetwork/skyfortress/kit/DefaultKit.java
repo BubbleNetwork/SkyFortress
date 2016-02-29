@@ -22,7 +22,7 @@ public class DefaultKit extends Kit{
     public static ItemStackBuilder SWORD = new ItemStackBuilder(Material.WOOD_SWORD).withName(COLOR + "A default sword");
     public static ItemStackBuilder SHOVEL = new ItemStackBuilder(Material.WOOD_SPADE).withName(COLOR + "A default shovel");
     public static ItemStackBuilder PICK = new ItemStackBuilder(Material.WOOD_PICKAXE).withName(COLOR + "A default pick");
-    public static ItemStackBuilder STEAK = new ItemStackBuilder(Material.GRILLED_PORK).withAmount(5);
+    public static ItemStackBuilder CARROTS = new ItemStackBuilder(Material.CARROT_ITEM).withAmount(5);
     public static ItemStackBuilder HELM = new ItemStackBuilder(Material.LEATHER_HELMET).withName(COLOR + "A default helm");
     public static ItemStackBuilder CHEST = new ItemStackBuilder(Material.LEATHER_CHESTPLATE).withName(COLOR + "A default chestplate");
     public static ItemStackBuilder PANTS = new ItemStackBuilder(Material.LEATHER_LEGGINGS).withName(COLOR + "Some default pants");
@@ -33,7 +33,7 @@ public class DefaultKit extends Kit{
                     .withT(0,SWORD.build())
                     .withT(1,SHOVEL.build())
                     .withT(2,PICK.build())
-                    .withT(3,STEAK.build()
+                    .withT(3,CARROTS.build()
                     );
 
     public static ArrayBuilder<ItemStack> DEFAULTARMORBUILD =
@@ -51,38 +51,38 @@ public class DefaultKit extends Kit{
                                 .build(),
                         DEFAULTBUILD.clone()
                                 .withT(0,SWORD.clone().withType(Material.STONE_SWORD).build())
-                                .withT(3,STEAK.clone().withAmount(10).build())
+                                .withT(3,CARROTS.clone().withAmount(10).build())
                                 .build(),
                         DEFAULTBUILD.clone()
                                 .withT(0,SWORD.clone().withType(Material.STONE_SWORD).build())
                                 .withT(1,SHOVEL.clone().withType(Material.STONE_SPADE).build())
                                 .withT(2,PICK.clone().withType(Material.STONE_PICKAXE).build())
-                                .withT(3,STEAK.clone().withAmount(20).build())
+                                .withT(3,CARROTS.clone().withAmount(20).build())
                                 .build(),
                         DEFAULTBUILD.clone()
                                 .withT(0,SWORD.clone().withType(Material.STONE_SWORD).withEnchantment(Enchantment.DAMAGE_ALL,1).build())
                                 .withT(1,SHOVEL.clone().withType(Material.STONE_SPADE).build())
                                 .withT(2,PICK.clone().withType(Material.STONE_PICKAXE).build())
-                                .withT(3,STEAK.clone().withAmount(20).build())
+                                .withT(3,CARROTS.clone().withAmount(20).build())
                                 .build(),
                         DEFAULTBUILD.clone()
                                 .withT(0,SWORD.clone().withType(Material.STONE_SWORD).withEnchantment(Enchantment.DAMAGE_ALL,1).build())
                                 .withT(1,SHOVEL.clone().withType(Material.STONE_SPADE).withEnchantment(Enchantment.DAMAGE_ALL,1).build())
                                 .withT(2,PICK.clone().withType(Material.STONE_PICKAXE).withEnchantment(Enchantment.DAMAGE_ALL,1).build())
-                                .withT(3,STEAK.clone().withAmount(20).build())
+                                .withT(3,CARROTS.clone().withAmount(20).build())
                                 .build(),
                         DEFAULTBUILD.clone()
                                 .withT(0,SWORD.clone().withType(Material.STONE_SWORD).withEnchantment(Enchantment.DAMAGE_ALL,1).build())
                                 .withT(1,SHOVEL.clone().withType(Material.STONE_SPADE).withEnchantment(Enchantment.DAMAGE_ALL,1).build())
                                 .withT(2,PICK.clone().withType(Material.STONE_PICKAXE).withEnchantment(Enchantment.DAMAGE_ALL,1).build())
-                                .withT(3,STEAK.clone().withAmount(20).build())
+                                .withT(3, CARROTS.clone().withAmount(20).build())
                                 .withT(4,new ItemStackBuilder(Material.GOLDEN_APPLE).build())
                                 .build(),
                         DEFAULTBUILD.clone()
                                 .withT(0,SWORD.clone().withType(Material.STONE_SWORD).withEnchantment(Enchantment.DAMAGE_ALL,1).build())
                                 .withT(1,SHOVEL.clone().withType(Material.STONE_SPADE).withEnchantment(Enchantment.DAMAGE_ALL,1).build())
                                 .withT(2,PICK.clone().withType(Material.STONE_PICKAXE).withEnchantment(Enchantment.DAMAGE_ALL,1).build())
-                                .withT(3,new ItemStackBuilder(Material.GOLDEN_CARROT).withAmount(10).build())
+                                .withT(3,CARROTS.clone().withType(Material.GOLDEN_CARROT).build())
                                 .withT(4,new ItemStackBuilder(Material.GOLDEN_APPLE).withAmount(4).build())
                                 .build()
                 )

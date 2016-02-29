@@ -25,6 +25,7 @@ public abstract class CreatureAI<T extends Creature> {
         creature.setCustomName(name);
         creature.setCustomNameVisible(true);
         creature.setMaxHealth(maxhealth);
+        creature.setHealth(maxhealth);
         SkyFortress.getInstance().getMobManager().getCreatureAIs().add(this);
     }
 
@@ -37,7 +38,10 @@ public abstract class CreatureAI<T extends Creature> {
     }
 
     public void remove(){
-        SkyFortress.getInstance().getMobManager().getCreatureAIs().remove(this);
+        try {
+            SkyFortress.getInstance().getMobManager().getCreatureAIs().remove(this);
+        } catch (Throwable e) {
+        }
         getCreature().removeMetadata(CreatureMeta.META,BubbleNetwork.getInstance().getPlugin());
         getCreature().remove();
     }

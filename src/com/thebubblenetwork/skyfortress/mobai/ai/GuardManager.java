@@ -1,5 +1,6 @@
 package com.thebubblenetwork.skyfortress.mobai.ai;
 
+import com.thebubblenetwork.api.framework.BubbleNetwork;
 import com.thebubblenetwork.api.framework.util.mc.world.LocationObject;
 import com.thebubblenetwork.api.game.BubbleGameAPI;
 import com.thebubblenetwork.api.game.GameTimer;
@@ -8,21 +9,22 @@ import org.bukkit.World;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 
-public class WitherGuardManager extends GameTimer{
+public class GuardManager extends GameTimer{
     private Set<GuardPosition> positionSet = new HashSet<>();
 
-    public WitherGuardManager(Iterable<Location> locations) {
-        super(20, Integer.MAX_VALUE);
-        for(Location l:locations){
-            positionSet.add(new GuardPosition(l));
-        }
-    }
-
-    public WitherGuardManager(World w, Iterable<LocationObject> locations) {
+    public GuardManager(World w, Iterable<LocationObject> locations) {
         super(20, Integer.MAX_VALUE);
         for(LocationObject l:locations){
-            positionSet.add(new GuardPosition(l.toLocation(w)));
+            Location location = l.toLocation(w);
+            location.setX(location.getBlockX() + 0.5D);
+            location.setZ(location.getBlockZ() + 0.5D);
+            location.setYaw(0F);
+            GuardPosition position = new GuardPosition(location);
+            positionSet.add(position);
+            position.respawn();
+            position.findPlayer();
         }
     }
 
@@ -39,7 +41,7 @@ public class WitherGuardManager extends GameTimer{
             try {
                 position.guard();
             } catch (GuardPosition.UnsafeException e) {
-
+                BubbleNetwork.getInstance().getLogger().log(Level.SEVERE,"Could not position guard",e);
             }
         }
     }

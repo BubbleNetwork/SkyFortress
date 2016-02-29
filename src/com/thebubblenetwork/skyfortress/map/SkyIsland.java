@@ -46,10 +46,10 @@ public class SkyIsland {
                     Chest c = (Chest)b.getState();
                     generation.apply(c);
                 }
-                throw new IllegalArgumentException("An island was missing a chest");
+                else throw new IllegalArgumentException("An island was missing a chest at " + object.toString());
             }
             catch (Throwable throwable){
-                Bukkit.getLogger().log(Level.SEVERE,"An error occurred whilst filling chests in an island",throwable);
+                Bukkit.getLogger().log(Level.SEVERE,"An error occurred whilst filling chests",throwable);
             }
         }
     }

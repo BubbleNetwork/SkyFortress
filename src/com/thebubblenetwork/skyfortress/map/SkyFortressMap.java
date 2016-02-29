@@ -25,16 +25,21 @@ public class SkyFortressMap extends GameMap{
         Map map = new HashMap<>();
 
         List<SkyIsland> islands = new ArrayList<>();
+        Set<Cord> cords = new HashSet<>();
         for(String island:configurationSection.getConfigurationSection("islands").getKeys(false)){
             String section = "islands." + island;
             LocationObject spawn = LocationUtil.fromConfig(configurationSection.getConfigurationSection(section + ".spawn"));
             Set<LocationObject> chests = new HashSet<>();
             for(String chest:configurationSection.getConfigurationSection(section + ".chests").getKeys(false)){
-                chests.add(LocationUtil.fromConfig(configurationSection.getConfigurationSection(section + ".chests." + chest)));
+                LocationObject object = LocationUtil.fromConfig(configurationSection.getConfigurationSection(section + ".chests." + chest));
+                chests.add(object);
+                cords.add(Cord.fromLocation(object));
             }
             islands.add(new SkyIsland(chests,spawn));
         }
         map.put("islands",islands);
+
+        map.put("cords",cords);
 
         Set<LocationObject> guards = new HashSet<>();
         for(String guard:configurationSection.getConfigurationSection("guards.wither").getKeys(false)){
@@ -55,6 +60,11 @@ public class SkyFortressMap extends GameMap{
     @SuppressWarnings("unchecked")
     public Set<LocationObject> getGuardLocations(){
         return (Set<LocationObject>) getSettings().get("witherguards");
+    }
+
+    @SuppressWarnings("unchecked")
+    public Set<Cord> getCordSet(){
+        return (Set<Cord>)getSettings().get("cords");
     }
 
     @SuppressWarnings("unchecked")

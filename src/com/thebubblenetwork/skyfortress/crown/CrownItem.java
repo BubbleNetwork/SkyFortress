@@ -26,6 +26,7 @@ public abstract class CrownItem implements Listener{
         }
         stack.setItemMeta(meta);
         item = spawn.getWorld().dropItem(spawn,stack);
+        item.teleport(spawn);
         SkyFortress.getInstance().registerListener(this);
     }
 

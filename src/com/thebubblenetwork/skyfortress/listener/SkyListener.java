@@ -1,9 +1,8 @@
 package com.thebubblenetwork.skyfortress.listener;
 
 import com.thebubblenetwork.api.framework.plugin.BubbleRunnable;
-import com.thebubblenetwork.api.game.BubbleGameAPI;
 import com.thebubblenetwork.skyfortress.SkyFortress;
-import com.thebubblenetwork.skyfortress.crown.CapManager;
+import com.thebubblenetwork.skyfortress.map.Cord;
 import com.thebubblenetwork.skyfortress.map.SkyFortressMap;
 import com.thebubblenetwork.skyfortress.map.SkyIsland;
 import org.bukkit.Location;
@@ -13,13 +12,16 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.InventoryHolder;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
 
 public class SkyListener implements Listener{
 
@@ -29,6 +31,8 @@ public class SkyListener implements Listener{
     public SkyListener(SkyFortress fortress){
         this.fortress = fortress;
     }
+
+    private Set<Cord> loaded = new HashSet<>();
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e){
@@ -69,6 +73,49 @@ public class SkyListener implements Listener{
                     died.teleport(l);
                 }
             }.runTask(SkyFortress.getInstance());
+        }
+    }
+
+    public Set<Cord> getLoaded() {
+        return loaded;
+    }
+
+    public boolean isContained(Cord c){
+        for(Cord cord:getLoaded()){
+            if(cord.equals(c))return true;
+        }
+        return false;
+    }
+
+    @EventHandler
+    public void onCreatureSpawn(CreatureSpawnEvent e){
+        switch (e.getSpawnReason()){
+            case DEFAULT:
+            case NATURAL:
+            case LIGHTNING:
+            case CHUNK_GEN:
+            case NETHER_PORTAL:
+            case SPAWNER:
+                e.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onPlayerPreOpenChest(PlayerInteractEvent e){
+        if(e.getAction() == Action.RIGHT_CLICK_BLOCK){
+            Block b = e.getClickedBlock();
+            if(b != null){
+                if(b.getType() == Material.CHEST){
+                    Cord c = Cord.fromBlock(b);
+                    if(!isContained(c)) {
+                        if(fortress.getMiddlechests().getUses() < 1){
+                            fortress.getMiddlechests().gen(1);
+                        }
+                        fortress.getMiddlechests().apply((InventoryHolder) b.getState());
+                        loaded.add(c);
+                    }
+                }
+            }
         }
     }
 }

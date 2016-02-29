@@ -8,8 +8,9 @@ import com.thebubblenetwork.api.game.kit.KitManager;
 import com.thebubblenetwork.api.game.maps.GameMap;
 import com.thebubblenetwork.api.game.maps.MapData;
 import com.thebubblenetwork.api.global.bubblepackets.messaging.messages.handshake.JoinableUpdate;
-import com.thebubblenetwork.skyfortress.chest.PregeneratedChest;
 import com.thebubblenetwork.skyfortress.chest.ChestType;
+import com.thebubblenetwork.skyfortress.chest.PregeneratedChest;
+import com.thebubblenetwork.skyfortress.chest.util.MiddleChestGeneration;
 import com.thebubblenetwork.skyfortress.chest.util.SpawnChestGeneration;
 import com.thebubblenetwork.skyfortress.crown.CapManager;
 import com.thebubblenetwork.skyfortress.crown.CrownItem;
@@ -19,12 +20,9 @@ import com.thebubblenetwork.skyfortress.map.SkyFortressMap;
 import com.thebubblenetwork.skyfortress.map.SkyIsland;
 import com.thebubblenetwork.skyfortress.mobai.CreatureAI;
 import com.thebubblenetwork.skyfortress.mobai.MobManager;
-import com.thebubblenetwork.skyfortress.mobai.ai.WitherGuardManager;
+import com.thebubblenetwork.skyfortress.mobai.ai.GuardManager;
 import com.thebubblenetwork.skyfortress.scoreboard.SkyFortressBoard;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 
@@ -53,8 +51,9 @@ public class SkyFortress extends BubbleGameAPI{
     private SkyFortressBoard board;
     private MobManager mobManager = new MobManager();
     private Set<PregeneratedChest> pregens = new HashSet<>();
+    private PregeneratedChest middlechests;
     private CrownItem item = null;
-    private WitherGuardManager guards = null;
+    private GuardManager guards = null;
     private CapManager capManager = new CapManager();
     private Set<SkyIsland> islands = null;
     private SkyListener listener = new SkyListener(this);
@@ -63,9 +62,13 @@ public class SkyFortress extends BubbleGameAPI{
         super("SkyFortress", GameMode.SURVIVAL, "Default Kit", 1);
         instance = this;
         board = new SkyFortressBoard();
+        long millis = System.currentTimeMillis();
+        middlechests = new PregeneratedChest(ChestType.SINGLE,new MiddleChestGeneration(),20);
         for(int i = 0;i < getType().getMaxPlayers();i ++){
             pregens.add(new PregeneratedChest(ChestType.SINGLE,new SpawnChestGeneration(),3));
         }
+        long diff = System.currentTimeMillis() - millis;
+        BubbleNetwork.getInstance().getPlugin().getLogger().log(Level.INFO,"Genning chests took {0}seconds",(double)diff/1000D);
         capManager = new CapManager();
         mobManager = new MobManager();
         listener = new SkyListener(this);
@@ -115,12 +118,18 @@ public class SkyFortress extends BubbleGameAPI{
             PregeneratedChest generation = chestGenerationIterator.next();
             island.fillChests(world,generation);
             island.setIfassigned(p);
-            p.teleport(island.getSpawn().toLocation(world));
+            Location l = island.getSpawn().toLocation(world);
+            l.setX(l.getBlockX() + 0.5D);
+            l.setZ(l.getBlockZ() + 0.5D);
+            l.setYaw(0F);
+            l.setPitch(l.toVector().angle(((SkyFortressMap) gameMap).getCrownLocation().toLocation(world).toVector()));
+            p.teleport(l);
         }
         Set<SkyIsland> islands = new HashSet<>();
         islands.addAll(map.getIslands());
         this.islands = islands;
-        guards = new WitherGuardManager(world,map.getGuardLocations());
+        listener.getLoaded().addAll(map.getCordSet());
+        guards = new GuardManager(world,map.getGuardLocations());
         resetCrown();
         pregens.clear();
     }
@@ -133,6 +142,10 @@ public class SkyFortress extends BubbleGameAPI{
         return null;
     }
 
+    public PregeneratedChest getMiddlechests() {
+        return middlechests;
+    }
+
     public MobManager getMobManager() {
         return mobManager;
     }
@@ -141,11 +154,9 @@ public class SkyFortress extends BubbleGameAPI{
         return board;
     }
 
-    public WitherGuardManager getGuards() {
+    public GuardManager getGuards() {
         return guards;
     }
-
-
 
     public CapManager getCapManager() {
         return capManager;

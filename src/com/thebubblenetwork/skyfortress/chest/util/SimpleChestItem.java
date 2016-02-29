@@ -1,5 +1,7 @@
 package com.thebubblenetwork.skyfortress.chest.util;
 
+import com.thebubblenetwork.skyfortress.chest.gen.ChestItem;
+import com.thebubblenetwork.skyfortress.chest.gen.ChestSlot;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 
