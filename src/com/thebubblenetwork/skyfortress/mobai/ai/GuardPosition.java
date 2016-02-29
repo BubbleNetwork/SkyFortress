@@ -1,5 +1,6 @@
 package com.thebubblenetwork.skyfortress.mobai.ai;
 
+import com.thebubblenetwork.api.framework.plugin.BubbleRunnable;
 import com.thebubblenetwork.skyfortress.SkyFortress;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -9,18 +10,13 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class GuardPosition implements GuardAI.DeathListener{
+    private static final int RESPAWNTIME = 15;
+
     private Location guardposition;
     private GuardAI guardAI = null;
-
-    private int RESPAWNTIME = 15;
-
-    private long died = 0L;
-
-    public boolean canRespawn(){
-        return new Date(died + (long)RESPAWNTIME*1000L).after(new Date(System.currentTimeMillis()));
-    }
 
     public GuardPosition(Location guardposition) {
         this.guardposition = guardposition;
@@ -32,12 +28,7 @@ public class GuardPosition implements GuardAI.DeathListener{
 
     public boolean isGuarded(){
         double diff;
-        return guardAI != null
-                && guardAI.getCreature() != null
-                && guardAI.isAlive()
-                && !guardAI.getCreature().isDead()
-                &&  guardposition.toVector().distanceSquared(guardAI.getCreature().getLocation().toVector()) < 10
-                && (diff = guardposition.getY() - guardAI.getCreature().getLocation().getY()) < 2 && diff > -2;
+        return getGuardposition().toVector().distance(guardAI.getCreature().getLocation().toVector()) < 10 && (diff = getGuardposition().getY() - guardAI.getCreature().getLocation().getY()) < 2 && diff > -2;
     }
 
     public boolean isSafe(){
@@ -73,23 +64,18 @@ public class GuardPosition implements GuardAI.DeathListener{
     }
 
     public void guard() throws UnsafeException{
-        if(!isGuarded()) {
-            if (isSafe()) {
-                if (guardAI != null && guardAI.isAlive() && !guardAI.getCreature().isDead()) {
-                    guardAI.getCreature().teleport(getGuardposition());
-                }
-                else if (canRespawn()){
-                    respawn();
-                    return;
-                }
-            }
-            else throw new UnsafeException();
+        if(guardAI.isAlive()) {
+            if(!isGuarded())guardAI.getCreature().teleport(getGuardposition());
+            findPlayer();
         }
-        findPlayer();
     }
 
     public void onDeath(){
-        died = System.currentTimeMillis();
+        new BubbleRunnable(){
+            public void run() {
+                respawn();
+            }
+        }.runTaskLater(SkyFortress.getInstance(), TimeUnit.SECONDS,RESPAWNTIME);
     }
 
     class UnsafeException extends Exception{

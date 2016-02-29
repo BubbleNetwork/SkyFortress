@@ -71,14 +71,6 @@ public class GuardAI extends CreatureAI<PigZombie>{
         }
     }
 
-    public boolean check(Block b){
-        return checkQuick(b) || checkQuick(b.getRelative(BlockFace.DOWN)) || checkQuick(b.getRelative(BlockFace.UP));
-    }
-
-    public boolean checkQuick(Block b){
-        return b != null && b.getType().isSolid();
-    }
-
     public void onDamage(EntityDamageEvent e) {
         if(e instanceof EntityDamageByEntityEvent){
             if(e instanceof Creature){
