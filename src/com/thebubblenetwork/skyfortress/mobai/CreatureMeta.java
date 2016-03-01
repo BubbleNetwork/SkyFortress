@@ -16,20 +16,21 @@ public class CreatureMeta implements Callable<Object> {
 
     private Creature creature;
 
-    public CreatureMeta(Creature creature){
-        if(creature == null)throw new IllegalArgumentException("Cannot be null");
+    public CreatureMeta(Creature creature) {
+        if (creature == null) {
+            throw new IllegalArgumentException("Cannot be null");
+        }
         this.creature = creature;
     }
 
-    public Creature getCreature(){
+    public Creature getCreature() {
         return creature;
     }
 
-    public CreatureAI call(){
-        try{
+    public CreatureAI call() {
+        try {
             return SkyFortress.getInstance().getMobManager().getAI(getCreature());
-        }
-        catch (Throwable ex){
+        } catch (Throwable ex) {
             return null;
         }
     }

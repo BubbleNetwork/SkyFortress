@@ -20,35 +20,41 @@ import java.util.Set;
  * 21/02/2016 {09:20}
  * Created February 2016
  */
-public class MobManager implements Listener{
+public class MobManager implements Listener {
     private Set<CreatureAI> creatureAIs = new HashSet<>();
 
     public Set<CreatureAI> getCreatureAIs() {
         return creatureAIs;
     }
 
-    protected CreatureAI getAI(Creature c){
-        for(CreatureAI creatureAI:getCreatureAIs()){
-            if(creatureAI.getCreature() == c)return creatureAI;
+    protected CreatureAI getAI(Creature c) {
+        for (CreatureAI creatureAI : getCreatureAIs()) {
+            if (creatureAI.getCreature() == c) {
+                return creatureAI;
+            }
         }
         return null;
     }
 
-    public void setupMeta(Creature c){
-        for(MetadataValue value:c.getMetadata(CreatureMeta.META)){
-            if(value.getOwningPlugin() == BubbleNetwork.getInstance().getPlugin()){
+    public void setupMeta(Creature c) {
+        for (MetadataValue value : c.getMetadata(CreatureMeta.META)) {
+            if (value.getOwningPlugin() == BubbleNetwork.getInstance().getPlugin()) {
                 throw new IllegalArgumentException("Already has meta");
             }
         }
-        c.setMetadata(CreatureMeta.META,new LazyMetadataValue(BubbleNetwork.getInstance().getPlugin(), LazyMetadataValue.CacheStrategy.CACHE_AFTER_FIRST_EVAL,new CreatureMeta(c)));
+        c.setMetadata(CreatureMeta.META, new LazyMetadataValue(BubbleNetwork.getInstance().getPlugin(), LazyMetadataValue.CacheStrategy.CACHE_AFTER_FIRST_EVAL, new CreatureMeta(c)));
     }
 
-    public CreatureAI getCreatureAI(Creature c){
-        for(MetadataValue value:c.getMetadata(CreatureMeta.META)){
-            if(value.getOwningPlugin() == BubbleNetwork.getInstance().getPlugin()){
+    public CreatureAI getCreatureAI(Creature c) {
+        for (MetadataValue value : c.getMetadata(CreatureMeta.META)) {
+            if (value.getOwningPlugin() == BubbleNetwork.getInstance().getPlugin()) {
                 Object object = value.value();
-                if(object == null)return null;
-                if(object instanceof CreatureAI)return (CreatureAI)object;
+                if (object == null) {
+                    return null;
+                }
+                if (object instanceof CreatureAI) {
+                    return (CreatureAI) object;
+                }
                 return null;
             }
         }
@@ -56,44 +62,44 @@ public class MobManager implements Listener{
     }
 
     @EventHandler
-    public void onCreatureSpawn(CreatureSpawnEvent e){
-        if(e.getEntity() instanceof Creature){
-            setupMeta((Creature)e.getEntity());
+    public void onCreatureSpawn(CreatureSpawnEvent e) {
+        if (e.getEntity() instanceof Creature) {
+            setupMeta((Creature) e.getEntity());
         }
     }
 
     @EventHandler
-    public void onCreatureTarget(EntityTargetEvent e){
-        if(e.getEntity() instanceof Creature){
-            CreatureAI ai = getCreatureAI((Creature)e.getEntity());
-            if(ai != null){
+    public void onCreatureTarget(EntityTargetEvent e) {
+        if (e.getEntity() instanceof Creature) {
+            CreatureAI ai = getCreatureAI((Creature) e.getEntity());
+            if (ai != null) {
                 ai.onTarget(e);
             }
         }
     }
 
     @EventHandler
-    public void onCreatureDamage(EntityDamageEvent e){
-        if(e.getEntity() instanceof Creature){
-            CreatureAI ai = getCreatureAI((Creature)e.getEntity());
-            if(ai != null){
+    public void onCreatureDamage(EntityDamageEvent e) {
+        if (e.getEntity() instanceof Creature) {
+            CreatureAI ai = getCreatureAI((Creature) e.getEntity());
+            if (ai != null) {
                 ai.onDamage(e);
             }
         }
     }
 
     @EventHandler
-    public void onCreatureDeath(EntityDeathEvent e){
-        if(e.getEntity() instanceof Creature){
-            if(e.getEntity() instanceof Creature){
-                CreatureAI ai = getCreatureAI((Creature)e.getEntity());
-                if(ai != null){
+    public void onCreatureDeath(EntityDeathEvent e) {
+        if (e.getEntity() instanceof Creature) {
+            if (e.getEntity() instanceof Creature) {
+                CreatureAI ai = getCreatureAI((Creature) e.getEntity());
+                if (ai != null) {
                     ai.onDeath(e);
                     ai.remove();
                     return;
                 }
             }
-            e.getEntity().removeMetadata(CreatureMeta.META,BubbleNetwork.getInstance().getPlugin());
+            e.getEntity().removeMetadata(CreatureMeta.META, BubbleNetwork.getInstance().getPlugin());
         }
     }
 }

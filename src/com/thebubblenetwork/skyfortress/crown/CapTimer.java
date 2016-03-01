@@ -8,16 +8,16 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class CapTimer extends GameTimer{
+public class CapTimer extends GameTimer {
     private static final DateFormat format = new SimpleDateFormat("mm:ss");
 
     public CapTimer() {
-        super(20, 60*4);
+        super(20, 60 * 4);
     }
 
     public void run(int i) {
-        for(GameBoard api: GameBoard.getBoards()){
-            SkyFortress.getInstance().getBoard().updateAll(api, SkyFortress.getInstance().getCapManager(),this);
+        for (GameBoard api : GameBoard.getBoards()) {
+            SkyFortress.getInstance().getBoard().updateAll(api, SkyFortress.getInstance().getCapManager(), this);
         }
     }
 
@@ -26,7 +26,7 @@ public class CapTimer extends GameTimer{
         SkyFortress.getInstance().win(SkyFortress.getInstance().getCapManager().getCapping());
     }
 
-    public String format(){
-        return format.format(new Date((long)(getLeft()*1000)));
+    public String format() {
+        return format.format(new Date((long) (getLeft() * 1000)));
     }
 }

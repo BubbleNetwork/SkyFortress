@@ -9,10 +9,9 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-public class GuardPosition implements GuardAI.DeathListener{
+public class GuardPosition implements GuardAI.DeathListener {
     private static final int RESPAWNTIME = 15;
 
     private Location guardposition;
@@ -26,28 +25,28 @@ public class GuardPosition implements GuardAI.DeathListener{
         return guardposition;
     }
 
-    public boolean isGuarded(){
+    public boolean isGuarded() {
         double diff;
-        return getGuardposition().toVector().distance(guardAI.getCreature().getLocation().toVector()) < 15 && (diff = getGuardposition().getY() - guardAI.getCreature().getLocation().getY()) < 2 && diff > -2;
+        return getGuardposition().toVector().distance(guardAI.getCreature().getLocation().toVector()) < 20 && (diff = getGuardposition().getY() - guardAI.getCreature().getLocation().getY()) < 2 && diff > -2;
     }
 
-    public boolean isSafe(){
+    public boolean isSafe() {
         Block b = getGuardposition().getBlock();
         return isSafeCheck(b.getRelative(BlockFace.DOWN)) && !isSafeCheck(b) && !isSafeCheck(b.getRelative(BlockFace.UP));
     }
 
-    private boolean isSafeCheck(Block b){
+    private boolean isSafeCheck(Block b) {
         return b.getType() != null && b.getType().isSolid();
     }
 
-    public void findPlayer(){
+    public void findPlayer() {
         double distancesquared = Double.MAX_VALUE;
         double temp;
         Player selected = null;
         Location creatureloc = guardAI.getCreature().getLocation();
-        for(Player p: Bukkit.getOnlinePlayers()){
-            if(!SkyFortress.getInstance().getGame().isSpectating(p)){
-                if((temp = p.getLocation().distanceSquared(creatureloc)) < distancesquared ){
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            if (!SkyFortress.getInstance().getGame().isSpectating(p)) {
+                if ((temp = guardposition.distanceSquared(creatureloc)) < distancesquared) {
                     distancesquared = temp;
                     selected = p;
                 }
@@ -57,8 +56,8 @@ public class GuardPosition implements GuardAI.DeathListener{
         guardAI.getCreature().setAngry(true);
     }
 
-    public void respawn(){
-        if (guardAI != null){
+    public void respawn() {
+        if (guardAI != null) {
             guardAI.deathListenerSet = null;
             guardAI.remove();
         }
@@ -66,21 +65,24 @@ public class GuardPosition implements GuardAI.DeathListener{
         guardAI.deathListenerSet.add(this);
     }
 
-    public void guard(){
-        if(guardAI.isAlive()) {
-            if(!isGuarded()){
+    public void guard() {
+        if (guardAI.isAlive()) {
+            if (!isGuarded()) {
                 guardAI.getCreature().teleport(getGuardposition());
             }
             findPlayer();
         }
     }
 
-    public void onDeath(){
-        new BubbleRunnable(){
+    public void onDeath() {
+        new BubbleRunnable() {
             public void run() {
-                if(isSafe())respawn();
-                else onDeath();
+                if (isSafe()) {
+                    respawn();
+                } else {
+                    onDeath();
+                }
             }
-        }.runTaskLater(SkyFortress.getInstance(), TimeUnit.SECONDS,RESPAWNTIME);
+        }.runTaskLater(SkyFortress.getInstance(), TimeUnit.SECONDS, RESPAWNTIME);
     }
 }

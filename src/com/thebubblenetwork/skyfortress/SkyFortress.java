@@ -39,15 +39,14 @@ import java.util.logging.Level;
  * 20/02/2016 {14:36}
  * Created February 2016
  */
-public class SkyFortress extends BubbleGameAPI{
+public class SkyFortress extends BubbleGameAPI {
     public static final int VERSION = 1;
-
-    private static SkyFortress instance;
 
     public static SkyFortress getInstance() {
         return instance;
     }
 
+    private static SkyFortress instance;
     private SkyFortressBoard board;
     private MobManager mobManager = new MobManager();
     private Set<PregeneratedChest> pregens = new HashSet<>();
@@ -63,35 +62,37 @@ public class SkyFortress extends BubbleGameAPI{
         instance = this;
         board = new SkyFortressBoard();
         long millis = System.currentTimeMillis();
-        middlechests = new PregeneratedChest(ChestType.SINGLE,new MiddleChestGeneration(),20);
-        for(int i = 0;i < getType().getMaxPlayers();i ++){
-            pregens.add(new PregeneratedChest(ChestType.SINGLE,new SpawnChestGeneration(),3));
+        middlechests = new PregeneratedChest(ChestType.SINGLE, new MiddleChestGeneration(), 20);
+        for (int i = 0; i < getType().getMaxPlayers(); i++) {
+            pregens.add(new PregeneratedChest(ChestType.SINGLE, new SpawnChestGeneration(), 3));
         }
         long diff = System.currentTimeMillis() - millis;
-        BubbleNetwork.getInstance().getPlugin().getLogger().log(Level.INFO,"Genning chests took {0}seconds",(double)diff/1000D);
+        BubbleNetwork.getInstance().getPlugin().getLogger().log(Level.INFO, "Genning chests took {0}seconds", (double) diff / 1000D);
         capManager = new CapManager();
         mobManager = new MobManager();
         listener = new SkyListener(this);
     }
 
     public void cleanup() {
-        if(item != null)item.cancel();
+        if (item != null) {
+            item.cancel();
+        }
         pregens.clear();
-        for(CreatureAI ai: mobManager.getCreatureAIs()){
+        for (CreatureAI ai : mobManager.getCreatureAIs()) {
             ai.remove();
         }
     }
 
     public void onStateChange(State oldstate, State newstate) {
         try {
-            BubbleNetwork.getInstance().getPacketHub().sendMessage(BubbleNetwork.getInstance().getProxy(),new JoinableUpdate(newstate == State.LOBBY));
+            BubbleNetwork.getInstance().getPacketHub().sendMessage(BubbleNetwork.getInstance().getProxy(), new JoinableUpdate(newstate == State.LOBBY));
         } catch (IOException e) {
-            BubbleNetwork.getInstance().getPlugin().getLogger().log(Level.WARNING,"Could not send joinable update for skyfortress",e);
+            BubbleNetwork.getInstance().getPlugin().getLogger().log(Level.WARNING, "Could not send joinable update for skyfortress", e);
         }
-        if(newstate == State.LOBBY){
+        if (newstate == State.LOBBY) {
             KitManager.getKits().add(new DefaultKit());
         }
-        if(newstate == State.RESTARTING){
+        if (newstate == State.RESTARTING) {
             KitManager.getKits().clear();
         }
     }
@@ -101,22 +102,28 @@ public class SkyFortress extends BubbleGameAPI{
     }
 
     public GameMap loadMap(String s, MapData mapData, File file, File file1) {
-        return new SkyFortressMap(s,mapData,file,file1);
+        return new SkyFortressMap(s, mapData, file, file1);
     }
 
     public void teleportPlayers(GameMap gameMap, World world) {
-        if(!(gameMap instanceof SkyFortressMap))throw new IllegalArgumentException("Invalid map");
+        if (!(gameMap instanceof SkyFortressMap)) {
+            throw new IllegalArgumentException("Invalid map");
+        }
         registerListener(getMobManager());
         registerListener(getListener());
-        SkyFortressMap map = (SkyFortressMap)gameMap;
+        SkyFortressMap map = (SkyFortressMap) gameMap;
         Iterator<PregeneratedChest> chestGenerationIterator = pregens.iterator();
         Iterator<? extends Player> playerIterator = Bukkit.getOnlinePlayers().iterator();
-        for(SkyIsland island:map.getIslands()){
-            if(!playerIterator.hasNext())break;
-            if(!chestGenerationIterator.hasNext())throw new IllegalArgumentException("Not enough chestgens");
+        for (SkyIsland island : map.getIslands()) {
+            if (!playerIterator.hasNext()) {
+                break;
+            }
+            if (!chestGenerationIterator.hasNext()) {
+                throw new IllegalArgumentException("Not enough chestgens");
+            }
             Player p = playerIterator.next();
             PregeneratedChest generation = chestGenerationIterator.next();
-            island.fillChests(world,generation);
+            island.fillChests(world, generation);
             island.setIfassigned(p);
             Location l = island.getSpawn().toLocation(world);
             l.setX(l.getBlockX() + 0.5D);
@@ -129,15 +136,19 @@ public class SkyFortress extends BubbleGameAPI{
         islands.addAll(map.getIslands());
         this.islands = islands;
         listener.getLoaded().addAll(map.getCordSet());
-        guards = new GuardManager(world,map.getGuardLocations());
+        guards = new GuardManager(world, map.getGuardLocations());
         resetCrown();
         pregens.clear();
     }
 
-    public SkyIsland getIfAssigned(Player p){
-        if(islands == null)throw new IllegalArgumentException("Islands are null");
-        for(SkyIsland island:islands){
-            if(island.getIfassigned() == p)return island;
+    public SkyIsland getIfAssigned(Player p) {
+        if (islands == null) {
+            throw new IllegalArgumentException("Islands are null");
+        }
+        for (SkyIsland island : islands) {
+            if (island.getIfassigned() == p) {
+                return island;
+            }
         }
         return null;
     }
@@ -167,14 +178,14 @@ public class SkyFortress extends BubbleGameAPI{
         return Long.MAX_VALUE;
     }
 
-    public void resetCrown(){
-        if(item != null){
+    public void resetCrown() {
+        if (item != null) {
             item.cancel();
         }
-        item = new CrownItem(new ItemStackBuilder(Material.GOLD_HELMET).withUnbreaking(true).withEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL).build(),((SkyFortressMap)getChosenGameMap()).getCrownLocation().toLocation(getChosen())){
+        item = new CrownItem(new ItemStackBuilder(Material.GOLD_HELMET).withUnbreaking(true).withEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL).build(), ((SkyFortressMap) getChosenGameMap()).getCrownLocation().toLocation(getChosen())) {
             public boolean pickup(Player p) {
-                if(!getGame().isSpectating(p)){
-                    if(!getCapManager().isCapped()){
+                if (!getGame().isSpectating(p)) {
+                    if (!getCapManager().isCapped()) {
                         getCapManager().startCap(p);
                         return true;
                     }

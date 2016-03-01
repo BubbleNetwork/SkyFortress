@@ -16,7 +16,7 @@ public enum ChestSlot {
 
     private ChestSlotType type;
 
-    ChestSlot(ChestSlotType type){
+    ChestSlot(ChestSlotType type) {
         this.type = type;
     }
 

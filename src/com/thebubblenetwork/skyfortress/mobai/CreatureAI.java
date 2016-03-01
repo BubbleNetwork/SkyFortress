@@ -18,7 +18,7 @@ public abstract class CreatureAI<T extends Creature> {
     private T creature;
     private int maxhealth;
 
-    protected CreatureAI (T creature,String name,int maxhealth){
+    protected CreatureAI(T creature, String name, int maxhealth) {
         this.creature = creature;
         this.maxhealth = maxhealth;
         creature.setTarget(null);
@@ -29,32 +29,34 @@ public abstract class CreatureAI<T extends Creature> {
         SkyFortress.getInstance().getMobManager().getCreatureAIs().add(this);
     }
 
-    public CreatureAI(Class<T> clazz,Location l,String name,int maxhealth){
-        this(l.getWorld().spawn(l,clazz),name,maxhealth);
+    public CreatureAI(Class<T> clazz, Location l, String name, int maxhealth) {
+        this(l.getWorld().spawn(l, clazz), name, maxhealth);
     }
 
-    public T getCreature(){
+    public T getCreature() {
         return creature;
     }
 
-    public void remove(){
+    public void remove() {
         try {
             SkyFortress.getInstance().getMobManager().getCreatureAIs().remove(this);
         } catch (Throwable e) {
         }
-        getCreature().removeMetadata(CreatureMeta.META,BubbleNetwork.getInstance().getPlugin());
+        getCreature().removeMetadata(CreatureMeta.META, BubbleNetwork.getInstance().getPlugin());
         getCreature().remove();
     }
 
-    public void dealDamage(double amt){
+    public void dealDamage(double amt) {
         getCreature().damage(amt);
     }
 
-    public int getMaxhealth(){
+    public int getMaxhealth() {
         return maxhealth;
     }
 
     public abstract void onDeath(EntityDeathEvent e);
+
     public abstract void onTarget(EntityTargetEvent e);
+
     public abstract void onDamage(EntityDamageEvent e);
 }

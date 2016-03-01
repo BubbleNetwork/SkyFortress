@@ -38,18 +38,18 @@ public class SkyIsland {
         return chests;
     }
 
-    public void fillChests(World world, PregeneratedChest generation){
-        for(LocationObject object:getChests()){
+    public void fillChests(World world, PregeneratedChest generation) {
+        for (LocationObject object : getChests()) {
             try {
                 Block b = object.toLocation(world).getBlock();
                 if (b != null && b.getType() == Material.CHEST) {
-                    Chest c = (Chest)b.getState();
+                    Chest c = (Chest) b.getState();
                     generation.apply(c);
+                } else {
+                    throw new IllegalArgumentException("An island was missing a chest at " + object.toString());
                 }
-                else throw new IllegalArgumentException("An island was missing a chest at " + object.toString());
-            }
-            catch (Throwable throwable){
-                Bukkit.getLogger().log(Level.SEVERE,"An error occurred whilst filling chests",throwable);
+            } catch (Throwable throwable) {
+                Bukkit.getLogger().log(Level.SEVERE, "An error occurred whilst filling chests", throwable);
             }
         }
     }

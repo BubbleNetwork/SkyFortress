@@ -4,8 +4,8 @@ public enum ChestType {
     SINGLE(3);
     private int size;
 
-    ChestType(int rows){
-        size = rows*9;
+    ChestType(int rows) {
+        size = rows * 9;
     }
 
     public int getSize() {

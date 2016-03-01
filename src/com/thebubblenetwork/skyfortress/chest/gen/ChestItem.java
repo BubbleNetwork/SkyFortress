@@ -15,7 +15,7 @@ public class ChestItem {
     private short data;
     private Material material;
     private ChestItem[] pairs;
-    private Map<Enchantment,Integer> enchantmentIntegerMap;
+    private Map<Enchantment, Integer> enchantmentIntegerMap;
 
     public ChestItem(ChestSlot slot, Map<Enchantment, Integer> enchantmentIntegerMap, ChestItem[] pairs, Material material, int[] stacksize, short data, float percent) {
         this.slot = slot;
@@ -27,11 +27,11 @@ public class ChestItem {
         this.percent = percent;
     }
 
-    public ItemStack create(){
+    public ItemStack create() {
         return new ItemStackBuilder(getMaterial()).withAmount(getRandomStackSize()).withData(getData()).withEnchantments(getEnchantmentIntegerMap()).build();
     }
 
-    public int getRandomStackSize(){
+    public int getRandomStackSize() {
         return getStacksize()[BubbleNetwork.getRandom().nextInt(getStacksize().length)];
     }
 

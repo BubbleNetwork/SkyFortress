@@ -20,25 +20,29 @@ public class PregeneratedChest {
     private ChestGeneration gen;
     private List<ItemStack[]> pregen = new ArrayList<>();
 
-    public PregeneratedChest(ChestType type, ChestGeneration gen, int uses){
+    public PregeneratedChest(ChestType type, ChestGeneration gen, int uses) {
         this.type = type;
         this.gen = gen;
         gen(uses);
     }
 
-    public void gen(int uses){
-        for(;uses > 0;uses--){
+    public void gen(int uses) {
+        for (; uses > 0; uses--) {
             pregen.add(getGen().generate(getType()));
         }
     }
 
-    public void apply(InventoryHolder holder){
+    public void apply(InventoryHolder holder) {
         apply(holder.getInventory());
     }
 
-    public void apply(Inventory inventory){
-        if(inventory.getSize() != getSize())throw new IllegalArgumentException("Inventory not compatible");
-        if(getUses() == 0)throw new IllegalArgumentException("No uses left");
+    public void apply(Inventory inventory) {
+        if (inventory.getSize() != getSize()) {
+            throw new IllegalArgumentException("Inventory not compatible");
+        }
+        if (getUses() == 0) {
+            throw new IllegalArgumentException("No uses left");
+        }
         inventory.setContents(pregen.remove(0));
     }
 
@@ -50,11 +54,11 @@ public class PregeneratedChest {
         return gen;
     }
 
-    public ChestType getType(){
+    public ChestType getType() {
         return type;
     }
 
-    public int getSize(){
+    public int getSize() {
         return getType().getSize();
     }
 

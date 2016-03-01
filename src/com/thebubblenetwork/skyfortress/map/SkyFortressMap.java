@@ -15,7 +15,7 @@ import java.util.*;
  * 20/02/2016 {15:30}
  * Created February 2016
  */
-public class SkyFortressMap extends GameMap{
+public class SkyFortressMap extends GameMap {
     public SkyFortressMap(String name, MapData data, File yml, File zip) {
         super(name, data, yml, zip);
     }
@@ -26,49 +26,50 @@ public class SkyFortressMap extends GameMap{
 
         List<SkyIsland> islands = new ArrayList<>();
         Set<Cord> cords = new HashSet<>();
-        for(String island:configurationSection.getConfigurationSection("islands").getKeys(false)){
+        for (String island : configurationSection.getConfigurationSection("islands").getKeys(false)) {
             String section = "islands." + island;
             LocationObject spawn = LocationUtil.fromConfig(configurationSection.getConfigurationSection(section + ".spawn"));
             Set<LocationObject> chests = new HashSet<>();
-            for(String chest:configurationSection.getConfigurationSection(section + ".chests").getKeys(false)){
+            for (String chest : configurationSection.getConfigurationSection(section + ".chests").getKeys(false)) {
                 LocationObject object = LocationUtil.fromConfig(configurationSection.getConfigurationSection(section + ".chests." + chest));
                 chests.add(object);
                 cords.add(Cord.fromLocation(object));
             }
-            islands.add(new SkyIsland(chests,spawn));
+            islands.add(new SkyIsland(chests, spawn));
         }
-        map.put("islands",islands);
+        map.put("islands", islands);
 
-        map.put("cords",cords);
+        map.put("cords", cords);
 
         Set<LocationObject> guards = new HashSet<>();
-        for(String guard:configurationSection.getConfigurationSection("guards.wither").getKeys(false)){
+        for (String guard : configurationSection.getConfigurationSection("guards.wither").getKeys(false)) {
             guards.add(LocationUtil.fromConfig(configurationSection.getConfigurationSection("guards.wither." + guard)));
         }
-        map.put("witherguards",guards);
+        map.put("witherguards", guards);
 
         LocationObject crownlocation = LocationUtil.fromConfig(configurationSection.getConfigurationSection("crown"));
-        map.put("crown",crownlocation);
+        map.put("crown", crownlocation);
 
         return map;
     }
+
     @SuppressWarnings("unchecked")
-    public List<SkyIsland> getIslands(){
+    public List<SkyIsland> getIslands() {
         return (List<SkyIsland>) getSettings().get("islands");
     }
 
     @SuppressWarnings("unchecked")
-    public Set<LocationObject> getGuardLocations(){
+    public Set<LocationObject> getGuardLocations() {
         return (Set<LocationObject>) getSettings().get("witherguards");
     }
 
     @SuppressWarnings("unchecked")
-    public Set<Cord> getCordSet(){
-        return (Set<Cord>)getSettings().get("cords");
+    public Set<Cord> getCordSet() {
+        return (Set<Cord>) getSettings().get("cords");
     }
 
     @SuppressWarnings("unchecked")
-    public LocationObject getCrownLocation(){
+    public LocationObject getCrownLocation() {
         return (LocationObject) getSettings().get("crown");
     }
 }

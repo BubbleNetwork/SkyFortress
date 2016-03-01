@@ -15,7 +15,7 @@ public class GuardManager extends BubbleRunnable {
     private Set<GuardPosition> positionSet = new HashSet<>();
 
     public GuardManager(World w, Iterable<LocationObject> locations) {
-        for(LocationObject l:locations){
+        for (LocationObject l : locations) {
             Location location = l.toLocation(w);
             location.setX(location.getBlockX() + 0.5D);
             location.setZ(location.getBlockZ() + 0.5D);
@@ -25,7 +25,7 @@ public class GuardManager extends BubbleRunnable {
             position.respawn();
             position.findPlayer();
         }
-        runTaskTimer(SkyFortress.getInstance(), TimeUnit.MILLISECONDS,500L);
+        runTaskTimer(SkyFortress.getInstance(), TimeUnit.MILLISECONDS, 500L);
     }
 
     public Set<GuardPosition> getPositionSet() {
@@ -33,11 +33,11 @@ public class GuardManager extends BubbleRunnable {
     }
 
     public void run() {
-        if(BubbleGameAPI.getInstance().getState() != BubbleGameAPI.State.INGAME && BubbleGameAPI.getInstance().getState() != BubbleGameAPI.State.PREGAME){
+        if (BubbleGameAPI.getInstance().getState() != BubbleGameAPI.State.INGAME && BubbleGameAPI.getInstance().getState() != BubbleGameAPI.State.PREGAME) {
             cancel();
             return;
         }
-        for(GuardPosition position:getPositionSet()){
+        for (GuardPosition position : getPositionSet()) {
             position.guard();
         }
     }
