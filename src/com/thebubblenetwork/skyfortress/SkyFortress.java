@@ -24,6 +24,8 @@ import com.thebubblenetwork.skyfortress.mobai.ai.GuardManager;
 import com.thebubblenetwork.skyfortress.scoreboard.SkyFortressBoard;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Creature;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -78,8 +80,11 @@ public class SkyFortress extends BubbleGameAPI {
             item.cancel();
         }
         pregens.clear();
-        for (CreatureAI ai : mobManager.getCreatureAIs()) {
-            ai.remove();
+        mobManager.getCreatureAIs().clear();
+        if(item != null)item.cancel();
+        if(capManager.isCapped())capManager.endCap(false);
+        for(Entity e:getChosen().getEntities()){
+            e.remove();
         }
     }
 

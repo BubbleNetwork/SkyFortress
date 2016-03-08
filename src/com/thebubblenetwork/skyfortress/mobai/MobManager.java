@@ -99,7 +99,6 @@ public class MobManager implements Listener {
                     return;
                 }
             }
-            e.getEntity().removeMetadata(CreatureMeta.META, BubbleNetwork.getInstance().getPlugin());
         }
     }
 }

@@ -14,12 +14,14 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 public abstract class CrownItem implements Listener {
     private Item item;
+    private BukkitTask task;
 
     public CrownItem(ItemStack stack, final Location spawn) {
         ItemMeta meta = stack.getItemMeta();
@@ -29,7 +31,7 @@ public abstract class CrownItem implements Listener {
         stack.setItemMeta(meta);
         item = spawn.getWorld().dropItem(spawn, stack);
         item.teleport(spawn);
-        new BubbleRunnable() {
+        task = new BubbleRunnable() {
             public void run() {
                 item.teleport(spawn);
             }
@@ -69,6 +71,11 @@ public abstract class CrownItem implements Listener {
         }
         item = null;
         HandlerList.unregisterAll(this);
+        try{
+            task.cancel();
+        }
+        catch (Exception ex){
+        }
     }
 
     @EventHandler
