@@ -5,19 +5,26 @@ import com.thebubblenetwork.skyfortress.SkyFortress;
 import com.thebubblenetwork.skyfortress.map.Cord;
 import com.thebubblenetwork.skyfortress.map.SkyFortressMap;
 import com.thebubblenetwork.skyfortress.map.SkyIsland;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import com.thebubblenetwork.skyfortress.mobai.CreatureAI;
+import com.thebubblenetwork.skyfortress.mobai.NMSCreature;
+import com.thebubblenetwork.skyfortress.mobai.ai.NMSGuard;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Player;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.InventoryHolder;
 
 import java.util.HashSet;
@@ -25,6 +32,7 @@ import java.util.Set;
 
 public class SkyListener implements Listener {
 
+    public static boolean BYPASS = false;
 
     private SkyFortress fortress;
     private Set<Cord> loaded = new HashSet<>();
@@ -40,19 +48,21 @@ public class SkyListener implements Listener {
             e.setDeathMessage(null);
             e.setKeepInventory(true);
             e.setKeepLevel(true);
-            fortress.getCapManager().endCap(true);
+            fortress.getCapManager().endCap();
             final World w = died.getWorld();
             new BubbleRunnable() {
                 public void run() {
-                    died.spigot().respawn();
-                    SkyIsland island = fortress.getIfAssigned(died);
-                    if (island != null) {
-                        Location location = island.getSpawn().toLocation(w);
-                        Block b = location.getBlock().getRelative(BlockFace.DOWN);
-                        if (!b.getType().isSolid()) {
-                            b.setType(Material.DIRT);
+                    if(died.isOnline()) {
+                        died.spigot().respawn();
+                        SkyIsland island = fortress.getIfAssigned(died);
+                        if (island != null) {
+                            Location location = island.getSpawn().toLocation(w);
+                            Block b = location.getBlock().getRelative(BlockFace.DOWN);
+                            if (!b.getType().isSolid()) {
+                                b.setType(Material.DIRT);
+                            }
+                            died.teleport(location);
                         }
-                        died.teleport(location);
                     }
                 }
             }.runTask(SkyFortress.getInstance());
@@ -84,17 +94,9 @@ public class SkyListener implements Listener {
         return false;
     }
 
-    @EventHandler
-    public void onCreatureSpawn(CreatureSpawnEvent e) {
-        switch (e.getSpawnReason()) {
-            case DEFAULT:
-            case NATURAL:
-            case LIGHTNING:
-            case CHUNK_GEN:
-            case NETHER_PORTAL:
-            case SPAWNER:
-                e.setCancelled(true);
-        }
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onSpecialSpawn(CreatureSpawnEvent e){
+        e.setCancelled(!BYPASS);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -114,5 +116,49 @@ public class SkyListener implements Listener {
                 }
             }
         }
+    }
+
+    public boolean isAI(Entity e){
+        return ((CraftEntity)e).getHandle() instanceof NMSCreature;
+    }
+
+    public boolean isGuard(Entity e){
+        return ((CraftEntity)e).getHandle() instanceof NMSGuard;
+    }
+
+    public CreatureAI getAI(Entity e){
+        CraftEntity entity = (CraftEntity)e;
+        if(entity.getHandle() instanceof NMSCreature){
+            return ((NMSCreature)entity.getHandle()).getCreatureAI();
+        }
+        return null;
+    }
+
+    @EventHandler
+    public void onCreatureAIDeath(EntityDeathEvent e){
+        CreatureAI ai = getAI(e.getEntity());
+        if(ai != null){
+            //Removing armor stand
+            if(ai.hasStand()){
+                ai.getStand().remove();
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent e){
+        if(SkyFortress.getInstance().getCapManager().isCapped() && SkyFortress.getInstance().getCapManager().getCapping() == e.getPlayer()){
+            SkyFortress.getInstance().getCapManager().endCap();
+        }
+    }
+
+    @EventHandler
+    public void onEntityDamage(EntityDamageEvent e){
+        if(e.getEntity() instanceof ArmorStand)e.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onPlayerInteractEntity(PlayerInteractEntityEvent e){
+        if(e.getRightClicked() instanceof ArmorStand)e.setCancelled(true);
     }
 }

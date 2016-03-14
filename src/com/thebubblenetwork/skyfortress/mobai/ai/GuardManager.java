@@ -2,43 +2,46 @@ package com.thebubblenetwork.skyfortress.mobai.ai;
 
 import com.thebubblenetwork.api.framework.plugin.BubbleRunnable;
 import com.thebubblenetwork.api.framework.util.mc.world.LocationObject;
-import com.thebubblenetwork.api.game.BubbleGameAPI;
 import com.thebubblenetwork.skyfortress.SkyFortress;
+import com.thebubblenetwork.skyfortress.mobai.CreatureAI;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.util.Vector;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-public class GuardManager extends BubbleRunnable {
-    private Set<GuardPosition> positionSet = new HashSet<>();
+public class GuardManager {
+    private static String GUARDNAME = ChatColor.RED + "Guard";
+    private Set<CreatureAI<NMSGuard,BukkitGuard>> guards = new HashSet<>();
 
-    public GuardManager(World w, Iterable<LocationObject> locations) {
-        for (LocationObject l : locations) {
-            Location location = l.toLocation(w);
-            location.setX(location.getBlockX() + 0.5D);
-            location.setZ(location.getBlockZ() + 0.5D);
-            location.setYaw(0F);
-            GuardPosition position = new GuardPosition(location);
-            positionSet.add(position);
-            position.respawn();
-            position.findPlayer();
+    public GuardManager(World w, Iterable<LocationObject> locationObjects){
+        for(LocationObject object:locationObjects){
+            CreatureAI<NMSGuard,BukkitGuard> ai = CreatureAI.create(NMSGuard.class,BukkitGuard.class,object.toLocation(w),GUARDNAME);
+            ai.getCreature().setGuardLocation(object.toLocation(w));
         }
-        runTaskTimer(SkyFortress.getInstance(), TimeUnit.MILLISECONDS, 500L);
     }
 
-    public Set<GuardPosition> getPositionSet() {
-        return positionSet;
+
+    public void respawn(CreatureAI<NMSGuard,BukkitGuard> ai){
+        if(guards.contains(ai)) {
+            guards.remove(ai);
+            Vector to = ai.getCreatureNMS().getTo();
+            final Location l = new Location(ai.getCreature().getWorld(), to.getX(), to.getY(), to.getZ());
+            new BubbleRunnable() {
+                public void run() {
+                    guards.add(CreatureAI.create(NMSGuard.class, BukkitGuard.class, l, GUARDNAME));
+                }
+            }.runTaskLater(SkyFortress.getInstance(), TimeUnit.SECONDS, 30);
+        }
     }
 
-    public void run() {
-        if (BubbleGameAPI.getInstance().getState() != BubbleGameAPI.State.INGAME && BubbleGameAPI.getInstance().getState() != BubbleGameAPI.State.PREGAME) {
-            cancel();
-            return;
+    public void deleteAll(){
+        for(CreatureAI ai:guards){
+            ai.getCreature().remove();
         }
-        for (GuardPosition position : getPositionSet()) {
-            position.guard();
-        }
+        guards.clear();
     }
 }

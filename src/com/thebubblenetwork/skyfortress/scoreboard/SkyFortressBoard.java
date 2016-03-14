@@ -9,6 +9,7 @@ import com.thebubblenetwork.skyfortress.crown.CapManager;
 import com.thebubblenetwork.skyfortress.crown.CapTimer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.scoreboard.NameTagVisibility;
 import org.bukkit.scoreboard.Team;
 
 /**
@@ -42,6 +43,20 @@ public class SkyFortressBoard extends BoardPreset {
     public void updateKing(BubbleBoardAPI api, CapManager manager) {
         String cap = manager.isCapped() ? manager.getCappingName() : "No one";
         api.getScore(this, getModule("CapValue1")).getTeam().setSuffix(cap);
+        Team t = api.getObject().getBoard().getTeam("KingTeam");
+        if(t == null){
+            t = api.getObject().getBoard().registerNewTeam("KingTeam");
+            t.setPrefix(ChatColor.GOLD + ChatColor.BOLD.toString() + "King " + ChatColor.YELLOW);
+        }
+        if(manager.isCapped()){
+            t.addPlayer(manager.getCapping());
+            t.setNameTagVisibility(NameTagVisibility.ALWAYS);
+        }
+        else{
+            for(String s:t.getEntries()){
+                t.removeEntry(s);
+            }
+        }
     }
 
     public void updateTime(BubbleBoardAPI api, CapTimer timer) {
