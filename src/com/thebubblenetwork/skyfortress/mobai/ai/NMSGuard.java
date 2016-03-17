@@ -57,7 +57,7 @@ public class NMSGuard extends EntityPigZombie implements NMSCreature<BukkitGuard
         //Attack players
         goalSelector.a(1, new PathfinderGoalMeleeAttack(this, EntityHuman.class, 1.25D, false));
         //Go back to spawn point or to target
-        goalSelector.a(2,new PathfinderGoalMoveTowardsRestriction(this,5.0D));//// FIXME: 14/03/2016 
+        goalSelector.a(2,new PathfinderGoalMoveTowardsTarget(this,5.0D));
         //Look at players
         goalSelector.a(4, new PathfinderGoalLookAtPlayer(this,EntityHuman.class,10.0F));
     }
@@ -84,7 +84,7 @@ public class NMSGuard extends EntityPigZombie implements NMSCreature<BukkitGuard
     protected void E() {
         setBaby(false);
         setVillager(false);
-        if(getGoalTarget() == null)a(new BlockPosition(getTo().getX(),getTo().getY(),getTo().getZ()));
+        if(getGoalTarget() == null)a(new BlockPosition(getTo().getX(),getTo().getY(),getTo().getZ()),0);
         if(getSoundDelay() > 0 && getSoundDelayChange(-1) == 0) {
             this.makeSound("mob.zombiepig.zpigangry", this.bB() * 2.0F, ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) * 1.8F);
         }
@@ -146,10 +146,9 @@ public class NMSGuard extends EntityPigZombie implements NMSCreature<BukkitGuard
 
     //Mob death
     @Override
-    public void die(){
-        //// FIXME: 14/03/2016 
-        super.die();
+    public void die(DamageSource damagesource) {
         SkyFortress.getInstance().getGuards().respawn(getCreatureAI());
+        super.die(damagesource);
     }
 
     public boolean isGoingback() {
@@ -204,13 +203,56 @@ public class NMSGuard extends EntityPigZombie implements NMSCreature<BukkitGuard
         @Override
         public void c() {
             EntityHuman human = target == null ? null : ((CraftPlayer) target).getHandle();
-            this.e.setGoalTarget(human, EntityTargetEvent.TargetReason.CUSTOM, false);
+            e.setGoalTarget(human, EntityTargetEvent.TargetReason.CUSTOM, false);
             super.c();
             target = null;
         }
 
         public NMSGuard getGuard() {
             return (NMSGuard) e;
+        }
+    }
+
+    public static class PathfinderGoalMoveTowardsTarget extends PathfinderGoal {
+        private NMSGuard a;
+        private double b;
+        private double c;
+        private double d;
+        private double e;
+
+        public PathfinderGoalMoveTowardsTarget(NMSGuard var1, double var2) {
+            this.a = var1;
+            this.e = var2;
+            this.a(1);
+        }
+
+        public boolean a() {
+            //Custom target
+            if(a.getGoalTarget() == null){
+                a.a(new BlockPosition(a.getTo().getX(),a.getTo().getY(),a.getTo().getZ()),0);
+            }
+            if(this.a.cg()) {
+                return false;
+            } else {
+                BlockPosition var1 = this.a.ch();
+                Vec3D var2 = RandomPositionGenerator.a(this.a, 16, 7, new Vec3D((double)var1.getX(), (double)var1.getY(), (double)var1.getZ()));
+                if(var2 == null) {
+                    return false;
+                } else {
+                    this.b = var2.a;
+                    this.c = var2.b;
+                    this.d = var2.c;
+                    return true;
+                }
+            }
+        }
+
+        public boolean b() {
+            return !this.a.getNavigation().m();
+        }
+
+        public void c() {
+            this.a.getNavigation().a(this.b, this.c, this.d, this.e);
         }
     }
 }
