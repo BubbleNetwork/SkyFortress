@@ -12,6 +12,7 @@ import net.citizensnpcs.api.util.DataKey;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 
 import java.util.Collections;
@@ -70,8 +71,11 @@ public class PigmanGuard extends Trait{
     }
 
     public void onSpawn() {
-        getNPC().getEntity().setCustomName(GUARDNAME);
-        getNPC().getEntity().setCustomNameVisible(true);
+        LivingEntity entity = ((LivingEntity)getNPC().getEntity());
+        entity.setCustomName(GUARDNAME);
+        entity.setCustomNameVisible(true);
+        entity.setMaxHealth(20.0D);
+        entity.setHealth(20.0D);
     }
 
     private static double DISTFROMPOST = 10.0D;
