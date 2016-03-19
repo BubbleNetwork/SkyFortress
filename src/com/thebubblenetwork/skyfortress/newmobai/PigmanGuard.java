@@ -1,5 +1,6 @@
 package com.thebubblenetwork.skyfortress.newmobai;
 
+import com.thebubblenetwork.api.framework.util.mc.items.ItemStackBuilder;
 import com.thebubblenetwork.skyfortress.SkyFortress;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.ai.GoalSelector;
@@ -11,6 +12,9 @@ import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.util.DataKey;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Ageable;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
@@ -19,6 +23,12 @@ import java.util.Collections;
 
 public class PigmanGuard extends Trait{
     private static String GUARDNAME = ChatColor.RED + "Guard";
+
+    private static ItemStackBuilder HELMET = new ItemStackBuilder(Material.GOLD_HELMET).withUnbreaking(true).withEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL);
+    private static ItemStackBuilder CHEST = new ItemStackBuilder(Material.CHAINMAIL_CHESTPLATE).withUnbreaking(true);
+    private static ItemStackBuilder PANTS = new ItemStackBuilder(Material.CHAINMAIL_LEGGINGS).withUnbreaking(true);
+    private static ItemStackBuilder BOOTS = new ItemStackBuilder(Material.CHAINMAIL_BOOTS).withUnbreaking(true);
+    private static ItemStackBuilder SWORD = new ItemStackBuilder(Material.IRON_SWORD).withUnbreaking(true);
 
     public static NPC spawnWithTrait(Location l){
         NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PIG_ZOMBIE, "Guard");
@@ -76,6 +86,26 @@ public class PigmanGuard extends Trait{
         entity.setCustomNameVisible(true);
         entity.setMaxHealth(20.0D);
         entity.setHealth(20.0D);
+
+        entity.getEquipment().setHelmet(HELMET.build());
+        entity.getEquipment().setChestplate(CHEST.build());
+        entity.getEquipment().setLeggings(PANTS.build());
+        entity.getEquipment().setBoots(BOOTS.build());
+
+        entity.getEquipment().setItemInHand(SWORD.build());
+
+        entity.getEquipment().setHelmetDropChance(0F);
+        entity.getEquipment().setLeggingsDropChance(0F);
+        entity.getEquipment().setChestplateDropChance(0F);
+        entity.getEquipment().setBootsDropChance(0F);
+
+        entity.getEquipment().setItemInHandDropChance(0F);
+
+        if(entity instanceof Ageable) {
+            Ageable ageable = (Ageable) entity;
+            ageable.setAdult();
+            ageable.setAgeLock(true);
+        }
     }
 
     private static double DISTFROMPOST = 10.0D;
