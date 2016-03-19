@@ -32,6 +32,13 @@ public class GuardManager {
         }
     }
 
+    public void spawnAll(){
+        for(NPC npc:guards){
+            if(!npc.isSpawned()) {
+                npc.spawn(npc.getTrait(PigmanGuard.class).getGuarding().toLocation(SkyFortress.getInstance().getChosen()));
+            }
+        }
+    }
 
     public void respawn(final NPC npc){
         if(guards.contains(npc) && npc.hasTrait(PigmanGuard.class)) {

@@ -103,6 +103,16 @@ public class SkyFortress extends BubbleGameAPI {
         if(newstate == State.HIDDEN){
             registerListener(getListener());
         }
+        if(newstate == State.INGAME){
+            getGuards().spawnAll();
+        }
+        if(newstate == State.LOADING && oldstate == State.RESTARTING){
+            middlechests = new PregeneratedChest(ChestType.SINGLE, new MiddleChestGeneration(), 30);
+            pregens.clear();
+            for (int i = 0; i < getType().getMaxPlayers(); i++) {
+                pregens.add(new PregeneratedChest(ChestType.SINGLE, new SpawnChestGeneration(), 3));
+            }
+        }
         if (newstate == State.LOBBY) {
             KitManager.getKits().add(new DefaultKit());
         }
@@ -127,15 +137,15 @@ public class SkyFortress extends BubbleGameAPI {
         Iterator<PregeneratedChest> chestGenerationIterator = pregens.iterator();
         Iterator<? extends Player> playerIterator = Bukkit.getOnlinePlayers().iterator();
         for (SkyIsland island : map.getIslands()) {
-            if (!playerIterator.hasNext()) {
-                break;
-            }
             if (!chestGenerationIterator.hasNext()) {
                 throw new IllegalArgumentException("Not enough chestgens");
             }
-            Player p = playerIterator.next();
             PregeneratedChest generation = chestGenerationIterator.next();
             island.fillChests(world, generation);
+            if (!playerIterator.hasNext()) {
+                break;
+            }
+            Player p = playerIterator.next();
             island.setIfassigned(p);
             Location l = island.getSpawn().toLocation(world);
             l.setX(l.getBlockX() + 0.5D);
