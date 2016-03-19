@@ -1,7 +1,6 @@
 package com.thebubblenetwork.skyfortress;
 
 import com.thebubblenetwork.api.framework.BubbleNetwork;
-import com.thebubblenetwork.api.framework.plugin.BubbleRunnable;
 import com.thebubblenetwork.api.framework.util.mc.items.ItemStackBuilder;
 import com.thebubblenetwork.api.framework.util.mc.scoreboard.BoardPreset;
 import com.thebubblenetwork.api.game.BubbleGameAPI;
@@ -9,7 +8,6 @@ import com.thebubblenetwork.api.game.kit.KitManager;
 import com.thebubblenetwork.api.game.maps.GameMap;
 import com.thebubblenetwork.api.game.maps.MapData;
 import com.thebubblenetwork.api.global.bubblepackets.messaging.messages.handshake.JoinableUpdate;
-import com.thebubblenetwork.api.global.file.FileUTIL;
 import com.thebubblenetwork.skyfortress.chest.ChestType;
 import com.thebubblenetwork.skyfortress.chest.PregeneratedChest;
 import com.thebubblenetwork.skyfortress.chest.util.MiddleChestGeneration;
@@ -20,14 +18,12 @@ import com.thebubblenetwork.skyfortress.kit.DefaultKit;
 import com.thebubblenetwork.skyfortress.listener.SkyListener;
 import com.thebubblenetwork.skyfortress.map.SkyFortressMap;
 import com.thebubblenetwork.skyfortress.map.SkyIsland;
-import com.thebubblenetwork.skyfortress.mobai.CreatureAI;
-import com.thebubblenetwork.skyfortress.mobai.ai.GuardManager;
+import com.thebubblenetwork.skyfortress.newmobai.GuardManager;
 import com.thebubblenetwork.skyfortress.scoreboard.SkyFortressBoard;
 import org.bukkit.*;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftArmorStand;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.io.File;

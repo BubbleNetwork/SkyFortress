@@ -57,7 +57,7 @@ public class NMSGuard extends EntityPigZombie implements NMSCreature<BukkitGuard
         //Attack players
         goalSelector.a(1, new PathfinderGoalMeleeAttack(this, EntityHuman.class, 1.25D, false));
         //Go back to spawn point or to target
-        goalSelector.a(2,new PathfinderGoalMoveTowardsTarget(this,5.0D));
+        goalSelector.a(2, new PathfinderGoalMoveTowardsTarget(this,5.0D));
         //Look at players
         goalSelector.a(4, new PathfinderGoalLookAtPlayer(this,EntityHuman.class,10.0F));
     }
@@ -84,7 +84,6 @@ public class NMSGuard extends EntityPigZombie implements NMSCreature<BukkitGuard
     protected void E() {
         setBaby(false);
         setVillager(false);
-        if(getGoalTarget() == null)a(new BlockPosition(getTo().getX(),getTo().getY(),getTo().getZ()),0);
         if(getSoundDelay() > 0 && getSoundDelayChange(-1) == 0) {
             this.makeSound("mob.zombiepig.zpigangry", this.bB() * 2.0F, ((this.random.nextFloat() - this.random.nextFloat()) * 0.2F + 1.0F) * 1.8F);
         }
@@ -142,13 +141,6 @@ public class NMSGuard extends EntityPigZombie implements NMSCreature<BukkitGuard
         super.initAttributes();
         getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(0.30D);//Faster
         getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(5.0D);//Follows less
-    }
-
-    //Mob death
-    @Override
-    public void die(DamageSource damagesource) {
-        SkyFortress.getInstance().getGuards().respawn(getCreatureAI());
-        super.die(damagesource);
     }
 
     public boolean isGoingback() {
