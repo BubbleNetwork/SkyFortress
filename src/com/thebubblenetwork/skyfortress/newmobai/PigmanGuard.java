@@ -67,7 +67,7 @@ public class PigmanGuard extends Trait{
 
     public void onAttach() {
         getNPC().getDefaultGoalController().addPrioritisableGoal(new PigmanGuardGoal());
-        getNPC().getDefaultGoalController().addGoal(new TargetNearbyEntityGoal.Builder(getNPC()).aggressive(true).radius(DISTFROMPOST).targets(Collections.singleton(EntityType.PLAYER)).build(),0);
+        getNPC().getDefaultGoalController().addGoal(new TargetNearbyEntityGoal.Builder(getNPC()).aggressive(true).radius(DISTFROMPOST).targets(Collections.singleton(EntityType.PLAYER)).build(),2);
     }
 
     public void onCopy() {
@@ -119,7 +119,7 @@ public class PigmanGuard extends Trait{
         }
 
         public int getPriority() {
-            return 0;
+            return 1;
         }
 
         public void run(GoalSelector goalSelector) {
