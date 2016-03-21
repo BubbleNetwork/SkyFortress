@@ -76,7 +76,6 @@ public class PigmanGuard extends Trait{
         getNPC().setProtected(false);
         getNPC().setFlyable(false);
         //TODO - Target behaviour
-        getNPC().getDefaultGoalController().clear();
         getNPC().getDefaultGoalController().addPrioritisableGoal(new PigmanGuardGoal());
         getNPC().getDefaultGoalController().addGoal(new TargetNearbyEntityGoal.Builder(getNPC()).aggressive(true).radius(DISTFROMPOST).targets(Collections.singleton(EntityType.PLAYER)).build(),2);
     }
@@ -88,7 +87,7 @@ public class PigmanGuard extends Trait{
     }
 
     public void onRemove() {
-        SkyFortress.getInstance().getGuards().respawn(getNPC());
+
     }
 
     public void onSpawn() {

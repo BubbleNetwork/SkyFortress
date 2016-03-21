@@ -5,14 +5,13 @@ import com.thebubblenetwork.skyfortress.SkyFortress;
 import com.thebubblenetwork.skyfortress.map.Cord;
 import com.thebubblenetwork.skyfortress.map.SkyFortressMap;
 import com.thebubblenetwork.skyfortress.map.SkyIsland;
-import com.thebubblenetwork.skyfortress.mobai.CreatureAI;
-import com.thebubblenetwork.skyfortress.mobai.NMSCreature;
-import com.thebubblenetwork.skyfortress.mobai.ai.NMSGuard;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
-import org.bukkit.entity.*;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -23,7 +22,6 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.InventoryHolder;
 
@@ -117,31 +115,10 @@ public class SkyListener implements Listener {
             }
         }
     }
-
-    public boolean isAI(Entity e){
-        return ((CraftEntity)e).getHandle() instanceof NMSCreature;
-    }
-
-    public boolean isGuard(Entity e){
-        return ((CraftEntity)e).getHandle() instanceof NMSGuard;
-    }
-
-    public CreatureAI getAI(Entity e){
-        CraftEntity entity = (CraftEntity)e;
-        if(entity.getHandle() instanceof NMSCreature){
-            return ((NMSCreature)entity.getHandle()).getCreatureAI();
-        }
-        return null;
-    }
-
     @EventHandler
     public void onCreatureAIDeath(EntityDeathEvent e){
-        CreatureAI ai = getAI(e.getEntity());
-        if(ai != null){
-            //Removing armor stand
-            if(ai.hasStand()){
-                ai.getStand().remove();
-            }
+        if(CitizensAPI.getNPCRegistry().isNPC(e.getEntity())){
+            NPC npc = CitizensAPI.getNPCRegistry().getNPC(e.getEntity());
         }
     }
 
