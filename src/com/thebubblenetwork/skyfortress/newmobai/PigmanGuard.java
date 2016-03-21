@@ -1,15 +1,22 @@
 package com.thebubblenetwork.skyfortress.newmobai;
 
+import com.sun.javafx.scene.control.behavior.BehaviorBase;
 import com.thebubblenetwork.api.framework.util.mc.items.ItemStackBuilder;
 import com.thebubblenetwork.skyfortress.SkyFortress;
 import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.ai.AttackStrategy;
 import net.citizensnpcs.api.ai.GoalSelector;
 import net.citizensnpcs.api.ai.PrioritisableGoal;
+import net.citizensnpcs.api.ai.TargetType;
 import net.citizensnpcs.api.ai.goals.TargetNearbyEntityGoal;
+import net.citizensnpcs.api.ai.tree.Behavior;
+import net.citizensnpcs.api.ai.tree.BehaviorStatus;
+import net.citizensnpcs.api.ai.tree.ForwardingBehaviorGoalAdapter;
 import net.citizensnpcs.api.exception.NPCLoadException;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.util.DataKey;
+import net.citizensnpcs.trait.ZombieModifier;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -66,6 +73,10 @@ public class PigmanGuard extends Trait{
     }
 
     public void onAttach() {
+        getNPC().setProtected(false);
+        getNPC().setFlyable(false);
+        getNPC().getDefaultGoalController().clear();
+        getNPC().getDefaultGoalController().addBehavior();
         getNPC().getDefaultGoalController().addPrioritisableGoal(new PigmanGuardGoal());
         getNPC().getDefaultGoalController().addGoal(new TargetNearbyEntityGoal.Builder(getNPC()).aggressive(true).radius(DISTFROMPOST).targets(Collections.singleton(EntityType.PLAYER)).build(),2);
     }
@@ -131,7 +142,10 @@ public class PigmanGuard extends Trait{
         }
 
         public boolean shouldExecute(GoalSelector goalSelector) {
-            return getNPC().hasTrait(PigmanGuard.class) && getNPC().getNavigator().getTargetAsLocation().toVector().distance(guard) > DISTFROMPOST;
+            return getNPC().hasTrait(PigmanGuard.class) && getNPC().getNavigator().getTargetAsLocation() != null && getNPC().getNavigator().getTargetAsLocation().toVector().distance(guard) > DISTFROMPOST;
         }
+    }
+
+    private class PigmanBehaviour implements Behavior {
     }
 }
