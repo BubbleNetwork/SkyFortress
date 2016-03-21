@@ -3,6 +3,7 @@ package com.thebubblenetwork.skyfortress.newmobai;
 import com.thebubblenetwork.api.framework.plugin.BubbleRunnable;
 import com.thebubblenetwork.api.framework.util.mc.world.LocationObject;
 import com.thebubblenetwork.skyfortress.SkyFortress;
+import com.thebubblenetwork.skyfortress.listener.SkyListener;
 import com.thebubblenetwork.skyfortress.mobai.CreatureAI;
 import com.thebubblenetwork.skyfortress.mobai.ai.BukkitGuard;
 import com.thebubblenetwork.skyfortress.mobai.ai.NMSGuard;
@@ -22,9 +23,12 @@ import java.util.concurrent.TimeUnit;
 
 public class GuardManager {
     private Set<NPC> guards = new HashSet<>();
+    private Set<BubbleRunnable> runnables = new HashSet<>();
     private TraitInfo traitInfo;
+    private World w;
 
     public GuardManager(World w, Iterable<LocationObject> locationObjects){
+        this.w = w;
         traitInfo = TraitInfo.create(PigmanGuard.class);
         CitizensAPI.getTraitFactory().registerTrait(traitInfo);
         for(LocationObject object:locationObjects){
@@ -33,30 +37,41 @@ public class GuardManager {
     }
 
     public void spawnAll(){
+        SkyListener.BYPASS = true;
         for(NPC npc:guards){
             if(!npc.isSpawned()) {
-                npc.spawn(npc.getTrait(PigmanGuard.class).getGuarding().toLocation(SkyFortress.getInstance().getChosen()));
+                npc.spawn(npc.getTrait(PigmanGuard.class).getGuarding().toLocation(w));
             }
         }
+        SkyListener.BYPASS = false;
     }
 
     public void respawn(final NPC npc){
         if(guards.contains(npc) && npc.hasTrait(PigmanGuard.class)) {
             Vector to = npc.getTrait(PigmanGuard.class).getGuarding();
-            final Location l = new Location(npc.getEntity().getWorld(), to.getX(), to.getY(), to.getZ());
-            new BubbleRunnable() {
+            final Location l = new Location(w, to.getX(), to.getY(), to.getZ());
+            BubbleRunnable runnable = new BubbleRunnable() {
                 public void run() {
+                    runnables.remove(this);
+                    SkyListener.BYPASS = true;
                     npc.spawn(l);
+                    SkyListener.BYPASS = false;
                 }
-            }.runTaskLater(SkyFortress.getInstance(), TimeUnit.SECONDS, 30);
+            };
+            runnables.add(runnable);
+            runnable.runTaskLater(SkyFortress.getInstance(), TimeUnit.SECONDS, 30);
         }
     }
 
     public void deleteAll(){
-        CitizensAPI.getTraitFactory().deregisterTrait(traitInfo);
         for(NPC ai:guards){
             ai.despawn(DespawnReason.PLUGIN);
+            ai.removeTrait(PigmanGuard.class);
         }
+        for(BubbleRunnable runnable:runnables){
+            runnable.cancel();
+        }
+        CitizensAPI.getTraitFactory().deregisterTrait(traitInfo);
         guards.clear();
     }
 }
