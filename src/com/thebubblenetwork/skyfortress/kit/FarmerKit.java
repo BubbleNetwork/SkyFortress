@@ -73,6 +73,6 @@ public class FarmerKit extends Kit {
                                 .withT(3, CARROTS.clone().withType(Material.GOLDEN_CARROT).build())
                                 .withT(4, new ItemStackBuilder(Material.GOLDEN_APPLE).withAmount(4).build())
                                 .build())
-                ,"Farmer", new String[]{"Consists of leather armor and a set of tools"}, 200);
+                ,"Farmer", new String[]{"Consists of leather armor and a set of tools", "Cost: Free"}, 200);
     }
 }

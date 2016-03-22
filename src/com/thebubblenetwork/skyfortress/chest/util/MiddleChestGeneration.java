@@ -113,6 +113,12 @@ public class MiddleChestGeneration extends ChestGeneration {
         doPotion(new int[]{3}, PotionType.INSTANT_HEAL, true, 2, false, 0.1F);
         doPotion(new int[]{1}, PotionType.FIRE_RESISTANCE, false, 1, false, 0.2F);
 
+        //Food
+        chestItems.add(new ChestItem(ChestSlot.FOOD, new HashMap<Enchantment, Integer>(), new ChestItem[0], Material.GRILLED_PORK, new int[]{32,48,64}, (short)0, 0.10F));
+        chestItems.add(new ChestItem(ChestSlot.FOOD, new HashMap<Enchantment, Integer>(), new ChestItem[0], Material.PUMPKIN_PIE, new int[]{32,48,64}, (short)0, 0.10F));
+        chestItems.add(new ChestItem(ChestSlot.FOOD, new HashMap<Enchantment, Integer>(), new ChestItem[0], Material.COOKED_BEEF, new int[]{32,48,64}, (short)0, 0.10F));
+        chestItems.add(new ChestItem(ChestSlot.FOOD, new HashMap<Enchantment, Integer>(), new ChestItem[0], Material.GOLDEN_CARROT, new int[]{32,48,64}, (short)0, 0.05F));
+
     }
 
     public MiddleChestGeneration() {

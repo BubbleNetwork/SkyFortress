@@ -80,6 +80,12 @@ public class SpawnChestGeneration extends ChestGeneration {
         chestItems.add(new ChestItem(ChestSlot.BLOCK, new HashMap<Enchantment, Integer>(), new ChestItem[0], Material.COBBLESTONE, new int[]{8, 16, 32, 64}, (short) 0, 0.40F));
         chestItems.add(new ChestItem(ChestSlot.BLOCK, new HashMap<Enchantment, Integer>(), new ChestItem[0], Material.LOG, new int[]{8, 16}, (short) 0, 0.20F));
         chestItems.add(new ChestItem(ChestSlot.BLOCK, new HashMap<Enchantment, Integer>(), new ChestItem[0], Material.WOOD, new int[]{8, 16, 32, 64}, (short) 0, 0.30F));
+
+        //Food
+        chestItems.add(new ChestItem(ChestSlot.FOOD, new HashMap<Enchantment, Integer>(), new ChestItem[0], Material.GRILLED_PORK, new int[]{4,8,16,32}, (short)0, 0.20F));
+        chestItems.add(new ChestItem(ChestSlot.FOOD, new HashMap<Enchantment, Integer>(), new ChestItem[0], Material.PUMPKIN_PIE, new int[]{4,8,16,32}, (short)0, 0.20F));
+        chestItems.add(new ChestItem(ChestSlot.FOOD, new HashMap<Enchantment, Integer>(), new ChestItem[0], Material.COOKED_BEEF, new int[]{4,8,16,32}, (short)0, 0.20F));
+        chestItems.add(new ChestItem(ChestSlot.FOOD, new HashMap<Enchantment, Integer>(), new ChestItem[0], Material.GOLDEN_CARROT, new int[]{4,8,16,32}, (short)0, 0.10F));
     }
 
     public SpawnChestGeneration() {
