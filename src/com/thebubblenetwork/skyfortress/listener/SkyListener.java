@@ -5,6 +5,7 @@ import com.thebubblenetwork.skyfortress.SkyFortress;
 import com.thebubblenetwork.skyfortress.map.Cord;
 import com.thebubblenetwork.skyfortress.map.SkyFortressMap;
 import com.thebubblenetwork.skyfortress.map.SkyIsland;
+import com.thebubblenetwork.skyfortress.newmobai.PigmanGuard;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.*;
@@ -15,7 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
+import org.bukkit.event.block.*;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -115,10 +116,65 @@ public class SkyListener implements Listener {
             }
         }
     }
+
+    @EventHandler
+    public void onCrownBreakNear(BlockBreakEvent e){
+        if(e.getBlock() != null && fortress.getChosenGameMap() != null && e.getBlock().getWorld() == fortress.getChosen()&& e.getBlock().getLocation().distance(((SkyFortressMap)fortress.getChosenGameMap()).getCrownLocation().toLocation(fortress.getChosen())) < 5){
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onCrownBreakNear(BlockBurnEvent e){
+        if(e.getBlock() != null && fortress.getChosenGameMap() != null && e.getBlock().getWorld() == fortress.getChosen()&& e.getBlock().getLocation().distance(((SkyFortressMap)fortress.getChosenGameMap()).getCrownLocation().toLocation(fortress.getChosen())) < 5){
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onCrownBreakNear(BlockSpreadEvent e){
+        if(e.getBlock() != null && fortress.getChosenGameMap() != null && e.getBlock().getWorld() == fortress.getChosen()&& e.getBlock().getLocation().distance(((SkyFortressMap)fortress.getChosenGameMap()).getCrownLocation().toLocation(fortress.getChosen())) < 5){
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onCrownPlaceNear(BlockDamageEvent e){
+        if(e.getBlock() != null && fortress.getChosenGameMap() != null && e.getBlock().getWorld() == fortress.getChosen()&& e.getBlock().getLocation().distance(((SkyFortressMap)fortress.getChosenGameMap()).getCrownLocation().toLocation(fortress.getChosen())) < 5){
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onCrownPlaceNear(BlockExplodeEvent e){
+        if(e.getBlock() != null && fortress.getChosenGameMap() != null && e.getBlock().getWorld() == fortress.getChosen()&& e.getBlock().getLocation().distance(((SkyFortressMap)fortress.getChosenGameMap()).getCrownLocation().toLocation(fortress.getChosen())) < 5){
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onCrownPlaceNear(BlockCanBuildEvent e){
+        if(e.getBlock() != null && fortress.getChosenGameMap() != null && e.getBlock().getWorld() == fortress.getChosen()&& e.getBlock().getLocation().distance(((SkyFortressMap)fortress.getChosenGameMap()).getCrownLocation().toLocation(fortress.getChosen())) < 5){
+            e.setBuildable(false);
+        }
+    }
+
+    @EventHandler
+    public void onCrownPlaceNear(BlockPlaceEvent e){
+        if(e.getBlock() != null && fortress.getChosenGameMap() != null && e.getBlock().getWorld() == fortress.getChosen()&& e.getBlock().getLocation().distance(((SkyFortressMap)fortress.getChosenGameMap()).getCrownLocation().toLocation(fortress.getChosen())) < 5){
+            e.setCancelled(true);
+        }
+    }
+
     @EventHandler
     public void onCreatureAIDeath(EntityDeathEvent e){
         if(CitizensAPI.getNPCRegistry().isNPC(e.getEntity())){
             NPC npc = CitizensAPI.getNPCRegistry().getNPC(e.getEntity());
+            if(npc.hasTrait(PigmanGuard.class)){
+                e.getDrops().clear();
+                e.setDroppedExp(0);
+                SkyFortress.getInstance().getGuards().respawn(npc);
+            }
         }
     }
 
