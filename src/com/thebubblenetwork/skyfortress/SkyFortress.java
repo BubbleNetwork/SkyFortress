@@ -14,6 +14,7 @@ import com.thebubblenetwork.skyfortress.chest.util.MiddleChestGeneration;
 import com.thebubblenetwork.skyfortress.chest.util.SpawnChestGeneration;
 import com.thebubblenetwork.skyfortress.crown.CapManager;
 import com.thebubblenetwork.skyfortress.crown.CrownItem;
+import com.thebubblenetwork.skyfortress.kit.BlacksmithKit;
 import com.thebubblenetwork.skyfortress.kit.FarmerKit;
 import com.thebubblenetwork.skyfortress.listener.SkyListener;
 import com.thebubblenetwork.skyfortress.map.SkyFortressMap;
@@ -115,6 +116,7 @@ public class SkyFortress extends BubbleGameAPI {
         }
         if (newstate == State.LOBBY) {
             KitManager.getKits().add(new FarmerKit());
+            KitManager.getKits().add(new BlacksmithKit());
         }
         if (newstate == State.RESTARTING) {
             KitManager.getKits().clear();
