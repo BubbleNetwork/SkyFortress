@@ -17,9 +17,11 @@ import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.util.DataKey;
 import net.citizensnpcs.trait.ZombieModifier;
+import net.minecraft.server.v1_8_R3.GenericAttributes;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.EntityType;
@@ -91,7 +93,7 @@ public class PigmanGuard extends Trait{
         getNPC().getDefaultGoalController().addPrioritisableGoal(new PigmanGuardGoal());
         getNPC().getDefaultGoalController().addGoal(new TargetNearbyEntityGoal.Builder(getNPC()).aggressive(true).radius(DISTFROMPOST).targets(Collections.singleton(EntityType.PLAYER)).build(),2);
 
-        LivingEntity entity = ((LivingEntity)getNPC().getEntity());
+        CraftLivingEntity entity = ((CraftLivingEntity)getNPC().getEntity());
         entity.setCustomName(GUARDNAME);
         entity.setCustomNameVisible(true);
         entity.setMaxHealth(20.0D);
@@ -110,6 +112,9 @@ public class PigmanGuard extends Trait{
         entity.getEquipment().setBootsDropChance(0F);
 
         entity.getEquipment().setItemInHandDropChance(0F);
+
+        entity.getHandle().getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(4);
+        entity.getHandle().getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(0.3);
 
         if(entity instanceof Ageable) {
             Ageable ageable = (Ageable) entity;
