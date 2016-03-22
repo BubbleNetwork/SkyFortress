@@ -4,15 +4,9 @@ import com.thebubblenetwork.api.framework.plugin.BubbleRunnable;
 import com.thebubblenetwork.api.framework.util.mc.world.LocationObject;
 import com.thebubblenetwork.skyfortress.SkyFortress;
 import com.thebubblenetwork.skyfortress.listener.SkyListener;
-import com.thebubblenetwork.skyfortress.mobai.CreatureAI;
-import com.thebubblenetwork.skyfortress.mobai.ai.BukkitGuard;
-import com.thebubblenetwork.skyfortress.mobai.ai.NMSGuard;
 import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.event.DespawnReason;
 import net.citizensnpcs.api.npc.NPC;
-import net.citizensnpcs.api.trait.TraitFactory;
 import net.citizensnpcs.api.trait.TraitInfo;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
@@ -65,8 +59,7 @@ public class GuardManager {
 
     public void deleteAll(){
         for(NPC ai:guards){
-            ai.despawn(DespawnReason.PLUGIN);
-            ai.removeTrait(PigmanGuard.class);
+            ai.destroy();
         }
         for(BubbleRunnable runnable:runnables){
             runnable.cancel();
