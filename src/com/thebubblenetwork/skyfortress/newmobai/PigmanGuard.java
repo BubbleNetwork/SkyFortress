@@ -38,7 +38,7 @@ public class PigmanGuard extends Trait{
     private static ItemStackBuilder SWORD = new ItemStackBuilder(Material.IRON_SWORD).withUnbreaking(true);
 
     public static NPC spawnWithTrait(Location l){
-        NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PIG_ZOMBIE, "Guard");
+        NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PIG_ZOMBIE, GUARDNAME);
         npc.addTrait(PigmanGuard.class);
         npc.getTrait(PigmanGuard.class).setGuard(l.toVector());
         return npc;
@@ -73,11 +73,6 @@ public class PigmanGuard extends Trait{
     }
 
     public void onAttach() {
-        getNPC().setProtected(false);
-        getNPC().setFlyable(false);
-        //TODO - Target behaviour
-        getNPC().getDefaultGoalController().addPrioritisableGoal(new PigmanGuardGoal());
-        getNPC().getDefaultGoalController().addGoal(new TargetNearbyEntityGoal.Builder(getNPC()).aggressive(true).radius(DISTFROMPOST).targets(Collections.singleton(EntityType.PLAYER)).build(),2);
     }
 
     public void onCopy() {
@@ -91,6 +86,11 @@ public class PigmanGuard extends Trait{
     }
 
     public void onSpawn() {
+        getNPC().setProtected(false);
+        getNPC().setFlyable(false);
+        getNPC().getDefaultGoalController().addPrioritisableGoal(new PigmanGuardGoal());
+        getNPC().getDefaultGoalController().addGoal(new TargetNearbyEntityGoal.Builder(getNPC()).aggressive(true).radius(DISTFROMPOST).targets(Collections.singleton(EntityType.PLAYER)).build(),2);
+
         LivingEntity entity = ((LivingEntity)getNPC().getEntity());
         entity.setCustomName(GUARDNAME);
         entity.setCustomNameVisible(true);
