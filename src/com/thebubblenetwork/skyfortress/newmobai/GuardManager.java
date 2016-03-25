@@ -1,6 +1,6 @@
 package com.thebubblenetwork.skyfortress.newmobai;
 
-import com.thebubblenetwork.api.framework.plugin.BubbleRunnable;
+import com.thebubblenetwork.api.framework.plugin.util.BubbleRunnable;
 import com.thebubblenetwork.api.framework.util.mc.world.LocationObject;
 import com.thebubblenetwork.skyfortress.SkyFortress;
 import com.thebubblenetwork.skyfortress.listener.SkyListener;
