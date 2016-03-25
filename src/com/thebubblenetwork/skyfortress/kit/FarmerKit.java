@@ -19,14 +19,14 @@ import java.util.Arrays;
 public class FarmerKit extends Kit {
     public static ChatColor COLOR = ChatColor.GRAY;
 
-    public static ItemStackBuilder SWORD = new ItemStackBuilder(Material.WOOD_SWORD).withName(COLOR + "A default sword");
-    public static ItemStackBuilder SHOVEL = new ItemStackBuilder(Material.WOOD_SPADE).withName(COLOR + "A default shovel");
-    public static ItemStackBuilder PICK = new ItemStackBuilder(Material.WOOD_PICKAXE).withName(COLOR + "A default pick");
+    public static ItemStackBuilder SWORD = new ItemStackBuilder(Material.WOOD_SWORD).withName(COLOR + "Farmer's stick");
+    public static ItemStackBuilder SHOVEL = new ItemStackBuilder(Material.WOOD_SPADE).withName(COLOR + "Farmer's spade");
+    public static ItemStackBuilder PICK = new ItemStackBuilder(Material.WOOD_PICKAXE).withName(COLOR + "Farmer's pitchfork");
     public static ItemStackBuilder CARROTS = new ItemStackBuilder(Material.CARROT_ITEM).withAmount(16);
-    public static ItemStackBuilder HELM = new ItemStackBuilder(Material.LEATHER_HELMET).withName(COLOR + "A default helm");
-    public static ItemStackBuilder CHEST = new ItemStackBuilder(Material.LEATHER_CHESTPLATE).withName(COLOR + "A default chestplate");
-    public static ItemStackBuilder PANTS = new ItemStackBuilder(Material.LEATHER_LEGGINGS).withName(COLOR + "Some default pants");
-    public static ItemStackBuilder BOOTS = new ItemStackBuilder(Material.LEATHER_BOOTS).withName(COLOR + "Some default boots");
+    public static ItemStackBuilder HELM = new ItemStackBuilder(Material.LEATHER_HELMET).withName(COLOR + "Farmer's cap");
+    public static ItemStackBuilder CHEST = new ItemStackBuilder(Material.LEATHER_CHESTPLATE).withName(COLOR + "Farmer's jumper");
+    public static ItemStackBuilder PANTS = new ItemStackBuilder(Material.LEATHER_LEGGINGS).withName(COLOR + "Farmer's pants");
+    public static ItemStackBuilder BOOTS = new ItemStackBuilder(Material.LEATHER_BOOTS).withName(COLOR + "Farmer's boots");
 
     public static ArrayBuilder<ItemStack> DEFAULTBUILD = newBuilder(4 * 9).withT(0, SWORD.build()).withT(1, SHOVEL.build()).withT(2, PICK.build()).withT(3, CARROTS.build()).withT(5, HELM.build()).withT(6, CHEST.build()).withT(7, PANTS.build()).withT(8, BOOTS.build());
 

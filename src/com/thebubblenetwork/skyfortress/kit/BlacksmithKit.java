@@ -59,6 +59,6 @@ public class BlacksmithKit extends Kit {
                         .withT(4, ENCHANTEDBOOK2.clone().withEnchantment(Enchantment.DAMAGE_ALL, 4).withEnchantment(Enchantment.FIRE_ASPECT, 1).build())
                         .build()
         )
-                , "Blacksmith Kit", new String[]{"Contains some iron, xp, an anvil and and some enchanted books", "Cost: 1000 Tokens"}, 1000);
+                , "BlackSmith", new String[]{"Contains some iron, xp, an anvil and and some enchanted books", "Cost: 1000 Tokens"}, 1000);
     }
 }
