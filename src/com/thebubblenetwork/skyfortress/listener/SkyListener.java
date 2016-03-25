@@ -1,6 +1,9 @@
 package com.thebubblenetwork.skyfortress.listener;
 
+import com.thebubblenetwork.api.framework.messages.Messages;
 import com.thebubblenetwork.api.framework.plugin.BubbleRunnable;
+import com.thebubblenetwork.api.game.BubbleGameAPI;
+import com.thebubblenetwork.api.game.GameTimer;
 import com.thebubblenetwork.skyfortress.SkyFortress;
 import com.thebubblenetwork.skyfortress.map.Cord;
 import com.thebubblenetwork.skyfortress.map.SkyFortressMap;
@@ -77,6 +80,9 @@ public class SkyListener implements Listener {
                     died.teleport(l);
                 }
             }.runTask(SkyFortress.getInstance());
+            if(fortress.getGame().getSpectatorList().size() == Bukkit.getOnlinePlayers().size()){
+                fortress.endGame();
+            }
         }
     }
 
@@ -95,8 +101,22 @@ public class SkyListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onSpecialSpawn(CreatureSpawnEvent e){
-        e.setCancelled(!BYPASS);
-    }
+        if(!BYPASS){
+            switch (e.getSpawnReason()){
+                case NATURAL:
+                case JOCKEY:
+                case CHUNK_GEN:
+                case EGG:
+                case LIGHTNING:
+                case BUILD_WITHER:
+                case REINFORCEMENTS:
+                case NETHER_PORTAL:
+                case SILVERFISH_BLOCK:
+                case DEFAULT:
+                    e.setCancelled(true);
+            }
+        }
+}
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerPreOpenChest(PlayerInteractEvent e) {
@@ -182,6 +202,9 @@ public class SkyListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent e){
         if(SkyFortress.getInstance().getCapManager().isCapped() && SkyFortress.getInstance().getCapManager().getCapping() == e.getPlayer()){
             SkyFortress.getInstance().getCapManager().endCap();
+        }
+        if(!fortress.getGame().isSpectating(e.getPlayer()) && fortress.getGame().getSpectatorList().size() <= Bukkit.getOnlinePlayers().size()){
+            fortress.endGame();
         }
     }
 

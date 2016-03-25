@@ -2,7 +2,6 @@ package com.thebubblenetwork.skyfortress;
 
 import com.thebubblenetwork.api.framework.BubbleNetwork;
 import com.thebubblenetwork.api.framework.util.mc.items.ItemStackBuilder;
-import com.thebubblenetwork.api.framework.util.mc.scoreboard.BoardPreset;
 import com.thebubblenetwork.api.game.BubbleGameAPI;
 import com.thebubblenetwork.api.game.kit.KitManager;
 import com.thebubblenetwork.api.game.maps.GameMap;
@@ -21,6 +20,7 @@ import com.thebubblenetwork.skyfortress.map.SkyFortressMap;
 import com.thebubblenetwork.skyfortress.map.SkyIsland;
 import com.thebubblenetwork.skyfortress.newmobai.GuardManager;
 import com.thebubblenetwork.skyfortress.scoreboard.SkyFortressBoard;
+import io.netty.util.internal.ConcurrentSet;
 import org.bukkit.*;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftArmorStand;
 import org.bukkit.enchantments.Enchantment;
@@ -62,7 +62,7 @@ public class SkyFortress extends BubbleGameAPI {
 
     private static SkyFortress instance;
     private SkyFortressBoard board;
-    private Set<PregeneratedChest> pregens = new HashSet<>();
+    private Set<PregeneratedChest> pregens = new ConcurrentSet<>();
     private PregeneratedChest middlechests;
     private CrownItem item = null;
     private GuardManager guards = null;
@@ -107,14 +107,21 @@ public class SkyFortress extends BubbleGameAPI {
         if(newstate == State.INGAME){
             getGuards().spawnAll();
         }
-        if(newstate == State.LOADING && oldstate == State.RESTARTING){
-            middlechests = new PregeneratedChest(ChestType.SINGLE, new MiddleChestGeneration(), 30);
-            pregens.clear();
-            for (int i = 0; i < getType().getMaxPlayers(); i++) {
-                pregens.add(new PregeneratedChest(ChestType.SINGLE, new SpawnChestGeneration(), 3));
-            }
-        }
         if (newstate == State.LOBBY) {
+            if(oldstate == State.RESTARTING){
+                new Thread(){
+                    @Override
+                    public void run() {
+                        long start = System.currentTimeMillis();
+                        middlechests = new PregeneratedChest(ChestType.SINGLE, new MiddleChestGeneration(), 30);
+                        pregens.clear();
+                        for (int i = 0; i < getType().getMaxPlayers(); i++) {
+                            pregens.add(new PregeneratedChest(ChestType.SINGLE, new SpawnChestGeneration(), 3));
+                        }
+                        System.out.println("Doing chests took " + (System.currentTimeMillis()-start)/1000 + "s");
+                    }
+                }.start();
+            }
             KitManager.getKits().add(new FarmerKit());
             KitManager.getKits().add(new BlacksmithKit());
         }
@@ -123,7 +130,7 @@ public class SkyFortress extends BubbleGameAPI {
         }
     }
 
-    public BoardPreset getScorePreset() {
+    public SkyFortressBoard getScorePreset() {
         return board;
     }
 
@@ -216,9 +223,7 @@ public class SkyFortress extends BubbleGameAPI {
     }
 
     public CraftArmorStand spawnHologram(Location l,String text){
-        SkyListener.BYPASS = true;
         CraftArmorStand stand = (CraftArmorStand) l.getWorld().spawn(l,ArmorStand.class);
-        SkyListener.BYPASS = false;
         stand.setGravity(false);
         stand.setVisible(false);
         stand.setSmall(true);
