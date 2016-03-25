@@ -1,6 +1,6 @@
 package com.thebubblenetwork.skyfortress.crown;
 
-import com.thebubblenetwork.api.game.GameTimer;
+import com.thebubblenetwork.api.framework.util.mc.timer.GameTimer;
 import com.thebubblenetwork.api.game.scoreboard.GameBoard;
 import com.thebubblenetwork.skyfortress.SkyFortress;
 
@@ -22,9 +22,9 @@ public class CapTimer extends GameTimer {
     }
 
     public void end() {
-        //PLAYER WIN
         SkyFortress.getInstance().win(SkyFortress.getInstance().getCapManager().getCapping());
-    }
+    }        //PLAYER WIN
+
 
     public String format() {
         return format.format(new Date((long) (getLeft() * 1000)));

@@ -1,36 +1,24 @@
 package com.thebubblenetwork.skyfortress.newmobai;
 
-import com.sun.javafx.scene.control.behavior.BehaviorBase;
 import com.thebubblenetwork.api.framework.util.mc.items.ItemStackBuilder;
 import com.thebubblenetwork.skyfortress.SkyFortress;
 import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.ai.AttackStrategy;
-import net.citizensnpcs.api.ai.GoalSelector;
-import net.citizensnpcs.api.ai.PrioritisableGoal;
-import net.citizensnpcs.api.ai.TargetType;
-import net.citizensnpcs.api.ai.goals.TargetNearbyEntityGoal;
-import net.citizensnpcs.api.ai.tree.Behavior;
+import net.citizensnpcs.api.ai.event.CancelReason;
+import net.citizensnpcs.api.ai.event.NavigatorCallback;
+import net.citizensnpcs.api.ai.tree.BehaviorGoalAdapter;
 import net.citizensnpcs.api.ai.tree.BehaviorStatus;
-import net.citizensnpcs.api.ai.tree.ForwardingBehaviorGoalAdapter;
 import net.citizensnpcs.api.exception.NPCLoadException;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.util.DataKey;
-import net.citizensnpcs.trait.ZombieModifier;
-import net.minecraft.server.v1_8_R3.GenericAttributes;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Ageable;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.*;
 import org.bukkit.util.Vector;
 
-import java.util.Collections;
-
-public class PigmanGuard extends Trait{
+public class PigmanGuard extends Trait {
     private static String GUARDNAME = ChatColor.RED + "Guard";
 
     private static ItemStackBuilder HELMET = new ItemStackBuilder(Material.GOLD_HELMET).withUnbreaking(true).withEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL);
@@ -39,7 +27,7 @@ public class PigmanGuard extends Trait{
     private static ItemStackBuilder BOOTS = new ItemStackBuilder(Material.CHAINMAIL_BOOTS).withUnbreaking(true);
     private static ItemStackBuilder SWORD = new ItemStackBuilder(Material.IRON_SWORD).withUnbreaking(true);
 
-    public static NPC spawnWithTrait(Location l){
+    public static NPC spawnWithTrait(Location l) {
         NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PIG_ZOMBIE, GUARDNAME);
         npc.addTrait(PigmanGuard.class);
         npc.getTrait(PigmanGuard.class).setGuard(l.toVector());
@@ -56,7 +44,7 @@ public class PigmanGuard extends Trait{
         super(PigmanGuard.class.getSimpleName());
     }
 
-    public void setGuard(Vector v){
+    public void setGuard(Vector v) {
         guard.setX(v.getX());
         guard.setY(v.getY());
         guard.setZ(v.getZ());
@@ -90,10 +78,17 @@ public class PigmanGuard extends Trait{
     public void onSpawn() {
         getNPC().setProtected(false);
         getNPC().setFlyable(false);
-        getNPC().getDefaultGoalController().addPrioritisableGoal(new PigmanGuardGoal());
-        getNPC().getDefaultGoalController().addGoal(new TargetNearbyEntityGoal.Builder(getNPC()).aggressive(true).radius(DISTFROMPOST).targets(Collections.singleton(EntityType.PLAYER)).build(),2);
 
-        CraftLivingEntity entity = ((CraftLivingEntity)getNPC().getEntity());
+        getNPC().getDefaultGoalController().clear();
+
+        getNPC().getDefaultGoalController().addBehavior(new GuardLookGoal(),1);
+        getNPC().getDefaultGoalController().addBehavior(new GuardTargetGoal(), 5);
+
+        getNPC().getNavigator().getDefaultParameters().attackRange(2.0D).avoidWater(true).baseSpeed(1.3F);
+        getNPC().getNavigator().getDefaultParameters().avoidWater(true);
+
+
+        LivingEntity entity = ((LivingEntity) getNPC().getEntity());
         entity.setCustomName(GUARDNAME);
         entity.setCustomNameVisible(true);
         entity.setMaxHealth(20.0D);
@@ -113,10 +108,7 @@ public class PigmanGuard extends Trait{
 
         entity.getEquipment().setItemInHandDropChance(0F);
 
-        entity.getHandle().getAttributeInstance(GenericAttributes.FOLLOW_RANGE).setValue(4);
-        entity.getHandle().getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(0.3);
-
-        if(entity instanceof Ageable) {
+        if (entity instanceof Ageable) {
             Ageable ageable = (Ageable) entity;
             ageable.setAdult();
             ageable.setAgeLock(true);
@@ -125,28 +117,71 @@ public class PigmanGuard extends Trait{
 
     private static double DISTFROMPOST = 10.0D;
 
-    private class PigmanGuardGoal implements PrioritisableGoal{
+    private class GuardLookGoal extends BehaviorGoalAdapter{
+        private boolean finished = false;
 
-        public PigmanGuardGoal() {
+        public void reset() {
+            finished = false;
+        }
+
+        public BehaviorStatus run() {
+            return finished ? BehaviorStatus.SUCCESS : BehaviorStatus.RUNNING;
+        }
+
+        public boolean shouldExecute() {
+            if(getNPC() != null && getNPC().hasTrait(PigmanGuard.class) && getNPC().isSpawned() && getNPC().getNavigator() != null && getNPC().getNavigator().getTargetAsLocation() != null){
+                getNPC().faceLocation(getNPC().getNavigator().getTargetAsLocation());
+                finished = true;
+                return true;
+            }
+            return false;
+        }
+    }
+
+    public class GuardTargetGoal extends BehaviorGoalAdapter {
+        private boolean finished;
+        private CancelReason reason;
+        private Player target;
+
+        private GuardTargetGoal() {
         }
 
         public void reset() {
+            getNPC().getNavigator().cancelNavigation();
+            this.target = null;
+            this.finished = false;
+            this.reason = null;
         }
 
-        public int getPriority() {
-            return 1;
+        public BehaviorStatus run() {
+            return this.finished ? (this.reason == null ? BehaviorStatus.SUCCESS : BehaviorStatus.FAILURE) : BehaviorStatus.RUNNING;
         }
 
-        public void run(GoalSelector goalSelector) {
-            if(getNPC().getNavigator().isNavigating()){
-                getNPC().getNavigator().cancelNavigation();
+        public boolean shouldExecute() {
+            if (getNPC() != null && getNPC().hasTrait(PigmanGuard.class) && getNPC().isSpawned() && getNPC().getNavigator() != null && getNPC().getEntity() != null) {
+                this.target = null;
+                for (Player entity : getNPC().getEntity().getWorld().getPlayers()) {
+                    if (SkyFortress.getInstance().getGame().isSpectating(entity) && entity.getLocation().toVector().distance(guard) < DISTFROMPOST) {
+                        this.target = entity;
+                        break;
+                    }
+                }
+
+                if (this.target != null) {
+                    getNPC().getNavigator().setTarget(this.target, true);
+                }
+                else{
+                    getNPC().getNavigator().setTarget(guard.toLocation(getNPC().getEntity().getWorld()));
+                }
+                getNPC().getNavigator().getLocalParameters().addSingleUseCallback(new NavigatorCallback() {
+                    public void onCompletion(CancelReason cancelReason) {
+                        GuardTargetGoal.this.reason = cancelReason;
+                        GuardTargetGoal.this.finished = true;
+                    }
+                });
+                return true;
             }
-            getNPC().getNavigator().setPaused(false);
-            getNPC().getNavigator().setTarget(guard.toLocation(getNPC().getEntity().getWorld()));
-        }
-
-        public boolean shouldExecute(GoalSelector goalSelector) {
-            return getNPC().hasTrait(PigmanGuard.class) && getNPC().getNavigator().getTargetAsLocation() != null && getNPC().getNavigator().getTargetAsLocation().toVector().distance(guard) > DISTFROMPOST;
+            return false;
         }
     }
 }

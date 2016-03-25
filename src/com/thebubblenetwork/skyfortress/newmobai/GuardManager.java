@@ -59,7 +59,7 @@ public class GuardManager {
 
     public void deleteAll(){
         for(NPC ai:guards){
-            ai.destroy();
+            ai.getOwningRegistry().deregister(ai);
         }
         for(BubbleRunnable runnable:runnables){
             runnable.cancel();

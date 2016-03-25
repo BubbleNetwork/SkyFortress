@@ -1,8 +1,8 @@
 package com.thebubblenetwork.skyfortress.scoreboard;
 
 import com.thebubblenetwork.api.framework.BubbleNetwork;
-import com.thebubblenetwork.api.framework.util.mc.scoreboard.BoardPreset;
-import com.thebubblenetwork.api.framework.util.mc.scoreboard.BubbleBoardAPI;
+import com.thebubblenetwork.api.framework.util.mc.scoreboard.api.BoardPreset;
+import com.thebubblenetwork.api.framework.util.mc.scoreboard.api.BubbleBoardAPI;
 import com.thebubblenetwork.api.framework.util.mc.scoreboard.util.BoardModuleBuilder;
 import com.thebubblenetwork.skyfortress.SkyFortress;
 import com.thebubblenetwork.skyfortress.crown.CapManager;
