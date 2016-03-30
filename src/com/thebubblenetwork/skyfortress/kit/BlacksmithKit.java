@@ -14,8 +14,8 @@ public class BlacksmithKit extends Kit {
     private static ItemStackBuilder ANVIL = new ItemStackBuilder(Material.ANVIL).withName(ChatColor.GRAY + "A blacksmith's anvil");
     private static ItemStackBuilder IRON = new ItemStackBuilder(Material.IRON_INGOT).withAmount(8);
     private static ItemStackBuilder EXP = new ItemStackBuilder(Material.EXP_BOTTLE).withAmount(8);
-    private static ItemStackBuilder ENCHANTEDBOOK1 = new ItemStackBuilder(Material.ENCHANTED_BOOK).withEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1);
-    private static ItemStackBuilder ENCHANTEDBOOK2 = new ItemStackBuilder(Material.ENCHANTED_BOOK).withEnchantment(Enchantment.DAMAGE_ALL, 1);
+    private static ItemStackBuilder ENCHANTEDBOOK1 = new ItemStackBuilder(Material.BOOK).withEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1);
+    private static ItemStackBuilder ENCHANTEDBOOK2 = new ItemStackBuilder(Material.BOOK).withEnchantment(Enchantment.DAMAGE_ALL, 1);
 
     private static ArrayBuilder<ItemStack> DEFAULTBUILD = new ArrayBuilder<>(ItemStack.class,4*9)
             .withT(0,ANVIL.build())
