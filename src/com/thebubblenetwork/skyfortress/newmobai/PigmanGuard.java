@@ -84,7 +84,7 @@ public class PigmanGuard extends Trait {
         getNPC().getDefaultGoalController().addBehavior(new GuardLookGoal(),1);
         getNPC().getDefaultGoalController().addBehavior(new GuardTargetGoal(), 5);
 
-        getNPC().getNavigator().getDefaultParameters().attackRange(2.5D).avoidWater(true).baseSpeed(1.5F);
+        getNPC().getNavigator().getDefaultParameters().attackRange(2.5D).avoidWater(true).baseSpeed(1.3F);
         getNPC().getNavigator().getDefaultParameters().distanceMargin(7.0D);
         getNPC().getNavigator().getDefaultParameters().avoidWater(true);
 
