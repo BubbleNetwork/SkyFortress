@@ -33,6 +33,7 @@ public class ChestGeneration {
             return Iterables.getFirst(items, null);
         }
         double percentsize = 0.0D;
+        //Find the total percentage
         for (ChestItem item : items) {
             percentsize += item.getPercent();
         }

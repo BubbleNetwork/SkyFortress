@@ -1,11 +1,13 @@
 package com.thebubblenetwork.skyfortress.listener;
 
 import com.thebubblenetwork.api.framework.plugin.util.BubbleRunnable;
+import com.thebubblenetwork.api.game.scoreboard.GameBoard;
 import com.thebubblenetwork.skyfortress.SkyFortress;
 import com.thebubblenetwork.skyfortress.map.Cord;
 import com.thebubblenetwork.skyfortress.map.SkyFortressMap;
 import com.thebubblenetwork.skyfortress.map.SkyIsland;
 import com.thebubblenetwork.skyfortress.newmobai.PigmanGuard;
+import com.thebubblenetwork.skyfortress.scoreboard.SkyFortressBoard;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.*;
@@ -81,6 +83,13 @@ public class SkyListener implements Listener {
                 fortress.endGame();
             }
         }
+        new BubbleRunnable(){
+            public void run() {
+                for(GameBoard board: GameBoard.getBoards()){
+                    if(board.getCurrentpreset() != null)board.enable(board.getCurrentpreset());
+                }
+            }
+        }.runTaskAsynchonrously(fortress);
     }
 
     public Set<Cord> getLoaded() {
@@ -203,6 +212,13 @@ public class SkyListener implements Listener {
         if(!fortress.getGame().isSpectating(e.getPlayer()) && fortress.getGame().getSpectatorList().size() <= Bukkit.getOnlinePlayers().size()){
             fortress.endGame();
         }
+        new BubbleRunnable(){
+            public void run() {
+                for(GameBoard board: GameBoard.getBoards()){
+                    if(board.getCurrentpreset() != null)board.enable(board.getCurrentpreset());
+                }
+            }
+        }.runTaskAsynchonrously(fortress);
     }
 
     @EventHandler
