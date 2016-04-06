@@ -21,7 +21,7 @@ import org.bukkit.util.Vector;
 public class PigmanGuard extends Trait {
     private static String GUARDNAME = ChatColor.RED + "Guard";
 
-    private static ItemStackBuilder HELMET = new ItemStackBuilder(Material.GOLD_HELMET).withUnbreaking(true).withEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL);
+    private static ItemStackBuilder HELMET = new ItemStackBuilder(Material.GOLD_HELMET).withUnbreaking(true).withEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 4);
     private static ItemStackBuilder CHEST = new ItemStackBuilder(Material.CHAINMAIL_CHESTPLATE).withUnbreaking(true);
     private static ItemStackBuilder PANTS = new ItemStackBuilder(Material.CHAINMAIL_LEGGINGS).withUnbreaking(true);
     private static ItemStackBuilder BOOTS = new ItemStackBuilder(Material.CHAINMAIL_BOOTS).withUnbreaking(true);
@@ -84,15 +84,16 @@ public class PigmanGuard extends Trait {
         getNPC().getDefaultGoalController().addBehavior(new GuardLookGoal(),1);
         getNPC().getDefaultGoalController().addBehavior(new GuardTargetGoal(), 5);
 
-        getNPC().getNavigator().getDefaultParameters().attackRange(2.0D).avoidWater(true).baseSpeed(1.3F);
+        getNPC().getNavigator().getDefaultParameters().attackRange(2.5D).avoidWater(true).baseSpeed(1.5F);
+        getNPC().getNavigator().getDefaultParameters().distanceMargin(7.0D);
         getNPC().getNavigator().getDefaultParameters().avoidWater(true);
 
 
         LivingEntity entity = ((LivingEntity) getNPC().getEntity());
         entity.setCustomName(GUARDNAME);
         entity.setCustomNameVisible(true);
-        entity.setMaxHealth(20.0D);
-        entity.setHealth(20.0D);
+        entity.setMaxHealth(25.0D);
+        entity.setHealth(25.0D);
 
         entity.getEquipment().setHelmet(HELMET.build());
         entity.getEquipment().setChestplate(CHEST.build());
@@ -115,7 +116,7 @@ public class PigmanGuard extends Trait {
         }
     }
 
-    private static double DISTFROMPOST = 10.0D;
+    private static double DISTFROMPOST = 7.0D;
 
     private class GuardLookGoal extends BehaviorGoalAdapter{
         private boolean finished = false;
@@ -161,7 +162,7 @@ public class PigmanGuard extends Trait {
             if (getNPC() != null && getNPC().hasTrait(PigmanGuard.class) && getNPC().isSpawned() && getNPC().getNavigator() != null && getNPC().getEntity() != null) {
                 this.target = null;
                 for (Player entity : getNPC().getEntity().getWorld().getPlayers()) {
-                    if (!SkyFortress.getInstance().getGame().isSpectating(entity) && entity.getLocation().toVector().distance(guard) < DISTFROMPOST) {
+                    if (!(SkyFortress.getInstance().getGame().isSpectating(entity) || (SkyFortress.getInstance().getCapManager().isCapped() && SkyFortress.getInstance().getCapManager().getCapping() == entity)) && entity.getLocation().toVector().distance(guard) <= DISTFROMPOST) {
                         this.target = entity;
                         break;
                     }
@@ -170,6 +171,7 @@ public class PigmanGuard extends Trait {
                 if (this.target != null) {
                     getNPC().getNavigator().setTarget(this.target, true);
                 }
+
                 else{
                     getNPC().getNavigator().setTarget(guard.toLocation(getNPC().getEntity().getWorld()));
                 }

@@ -9,6 +9,9 @@ import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.TraitInfo;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Monster;
+import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import java.util.HashSet;
@@ -66,5 +69,28 @@ public class GuardManager {
         }
         CitizensAPI.getTraitFactory().deregisterTrait(traitInfo);
         guards.clear();
+    }
+
+    public void targetIfInRange(Player target, double range){
+        for(NPC ai: guards){
+            if(ai.isSpawned() && ai.getEntity() instanceof Monster && ai.hasTrait(PigmanGuard.class)){
+                Location l = ai.getEntity().getLocation();
+                if(l.getWorld() == target.getWorld() && l.distance(target.getLocation()) < range){
+                    Monster monster = (Monster) ai.getEntity();
+                    monster.setTarget(target);
+                }
+            }
+        }
+    }
+
+    public void cancelTarget(Player target){
+        for(NPC ai: guards){
+            if(ai.isSpawned() && ai.getEntity() instanceof Monster && ai.hasTrait(PigmanGuard.class)){
+                Monster entity = (Monster) ai.getEntity();
+                if(entity.getTarget() == target){
+                    entity.setTarget(null);
+                }
+            }
+        }
     }
 }

@@ -19,10 +19,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -79,7 +76,10 @@ public class SkyListener implements Listener {
                     died.teleport(l);
                 }
             }.runTask(SkyFortress.getInstance());
-            if(fortress.getGame().getSpectatorList().size() == Bukkit.getOnlinePlayers().size()){
+            if(fortress.getGame().getSpectatorList().size() == Bukkit.getOnlinePlayers().size()-1 && fortress.getCapManager().isCapped()){
+                fortress.win(fortress.getCapManager().getCapping());
+            }
+            else if(fortress.getGame().getSpectatorList().size() == Bukkit.getOnlinePlayers().size()){
                 fortress.endGame();
             }
         }
@@ -209,7 +209,7 @@ public class SkyListener implements Listener {
         if(SkyFortress.getInstance().getCapManager().isCapped() && SkyFortress.getInstance().getCapManager().getCapping() == e.getPlayer()){
             SkyFortress.getInstance().getCapManager().endCap();
         }
-        if(!fortress.getGame().isSpectating(e.getPlayer()) && fortress.getGame().getSpectatorList().size() <= Bukkit.getOnlinePlayers().size()){
+        if(!fortress.getGame().isSpectating(e.getPlayer()) && fortress.getGame().getSpectatorList().size() >= Bukkit.getOnlinePlayers().size()){
             fortress.endGame();
         }
         new BubbleRunnable(){
@@ -229,5 +229,20 @@ public class SkyListener implements Listener {
     @EventHandler
     public void onPlayerInteractEntity(PlayerInteractEntityEvent e){
         if(e.getRightClicked() instanceof ArmorStand)e.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onKingDamage(EntityDamageByEntityEvent e){
+        if(e.getEntity() instanceof Player && e.getDamager() instanceof Player && fortress.getCapManager().isCapped()){
+            Player damaged = (Player) e.getEntity();
+            Player damager = (Player) e.getDamager();
+
+            if(damaged == fortress.getCapManager().getCapping()){
+                fortress.getGuards().targetIfInRange(damager, 10.0);
+            }
+            else if(damager == fortress.getCapManager().getCapping()){
+                fortress.getGuards().targetIfInRange(damaged, 5.0);
+            }
+        }
     }
 }

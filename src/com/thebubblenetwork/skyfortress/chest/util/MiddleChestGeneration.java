@@ -91,7 +91,7 @@ public class MiddleChestGeneration extends ChestGeneration {
         ChestItem FNS = new ChestItem(ChestSlot.EXTRA, new HashMap<Enchantment, Integer>(), new ChestItem[0], Material.FLINT_AND_STEEL, new int[]{1}, (short) 0, 0F);
 
         //TNT
-        chestItems.add(new ChestItem(ChestSlot.OTHER_WEAPON, new HashMap<Enchantment, Integer>(), new ChestItem[]{FNS}, Material.TNT, new int[]{16, 32, 48, 64}, (short) 0, 0.5F));
+        chestItems.add(new ChestItem(ChestSlot.OTHER_WEAPON, new HashMap<Enchantment, Integer>(), new ChestItem[]{FNS}, Material.TNT, new int[]{2, 4, 6}, (short) 0, 0.5F));
 
         //CRAPPLES
         chestItems.add(new ChestItem(ChestSlot.FOOD, new HashMap<Enchantment, Integer>(), new ChestItem[0], Material.GOLDEN_APPLE, new int[]{2, 3, 4, 5, 6}, (short) 0, 0.3F));

@@ -6,6 +6,7 @@ import com.thebubblenetwork.api.framework.messages.titlemanager.types.TimingTick
 import com.thebubblenetwork.api.framework.player.BukkitBubblePlayer;
 import com.thebubblenetwork.api.game.scoreboard.GameBoard;
 import com.thebubblenetwork.skyfortress.SkyFortress;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -49,6 +50,12 @@ public class CapManager {
     public void startCap(Player p) {
         if (isCapped()) {
             throw new IllegalArgumentException("Already capped");
+        }
+        SkyFortress.getInstance().getGuards().cancelTarget(p);
+        if(SkyFortress.getInstance().getGame().getSpectatorList().size() == Bukkit.getOnlinePlayers().size() -1){
+            SkyFortress.getInstance().getItem().cancel();
+            SkyFortress.getInstance().win(p);
+            return;
         }
         capping = p;
         timer = new CapTimer();
