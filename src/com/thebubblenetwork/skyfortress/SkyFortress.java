@@ -71,7 +71,7 @@ public class SkyFortress extends BubbleGameAPI {
     private SkyListener listener = new SkyListener(this);
 
     public SkyFortress() {
-        super("SkyFortress", GameMode.SURVIVAL, "Farmer", 1);
+        super("SkyFortress", GameMode.SURVIVAL, "Farmer", 4);
         instance = this;
         board = new SkyFortressBoard();
         long millis = System.currentTimeMillis();

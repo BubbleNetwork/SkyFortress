@@ -34,12 +34,15 @@ public class ChestGeneration {
         }
         double percentsize = 0.0D;
         for (ChestItem item : items) {
-            percentsize += (double) item.getPercent();
+            percentsize += item.getPercent();
         }
-        float currentchance = 0.0F;
-        float chosen = BubbleNetwork.getRandom().nextFloat();
+        double currentchance = 0.0D;
+        //Get a number between 0 and percentsize
+        double chosen = BubbleNetwork.getRandom().nextDouble() * percentsize;
         for (ChestItem item : items) {
-            currentchance += chance(percentsize, item.getPercent());
+            //Add to currentchance the total percentage
+            currentchance += percentsize / item.getPercent();
+            //If the currentchance is NOW above the random number it has been selected
             if (chosen < currentchance) {
                 return item;
             }
@@ -64,10 +67,6 @@ public class ChestGeneration {
                 addto.add(item);
             }
         }
-    }
-
-    private float chance(double percentsize, float currentchance) {
-        return (float) ((double) currentchance / percentsize);
     }
 
     public ItemStack[] generate(ChestType type) {

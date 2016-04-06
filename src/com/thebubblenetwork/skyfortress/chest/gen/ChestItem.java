@@ -10,14 +10,14 @@ import java.util.Map;
 
 public class ChestItem {
     private ChestSlot slot;
-    private float percent;
+    private double percent;
     private int stacksize[];
     private short data;
     private Material material;
     private ChestItem[] pairs;
     private Map<Enchantment, Integer> enchantmentIntegerMap;
 
-    public ChestItem(ChestSlot slot, Map<Enchantment, Integer> enchantmentIntegerMap, ChestItem[] pairs, Material material, int[] stacksize, short data, float percent) {
+    public ChestItem(ChestSlot slot, Map<Enchantment, Integer> enchantmentIntegerMap, ChestItem[] pairs, Material material, int[] stacksize, short data, double percent) {
         this.slot = slot;
         this.enchantmentIntegerMap = enchantmentIntegerMap;
         this.pairs = pairs;
@@ -51,7 +51,7 @@ public class ChestItem {
         return slot;
     }
 
-    public float getPercent() {
+    public double getPercent() {
         return percent;
     }
 
