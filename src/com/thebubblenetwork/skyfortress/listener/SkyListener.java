@@ -245,4 +245,11 @@ public class SkyListener implements Listener {
             }
         }
     }
+
+    @EventHandler
+    public void onKingTarget(EntityTargetEvent event){
+        if(fortress.getCapManager().isCapped() && fortress.getCapManager().getCapping() == event.getEntity()){
+            event.setCancelled(true);
+        }
+    }
 }
