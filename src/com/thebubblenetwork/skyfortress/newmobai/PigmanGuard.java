@@ -18,6 +18,9 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.util.Vector;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PigmanGuard extends Trait {
     private static String GUARDNAME = ChatColor.RED + "Guard";
 
@@ -51,15 +54,9 @@ public class PigmanGuard extends Trait {
     }
 
     public void save(DataKey key) {
-        key.setDouble("x", guard.getX());
-        key.setDouble("y", guard.getY());
-        key.setDouble("z", guard.getZ());
     }
 
     public void load(DataKey key) throws NPCLoadException {
-        guard.setX(key.getDouble("x"));
-        guard.setY(key.getDouble("y"));
-        guard.setZ(key.getDouble("z"));
     }
 
     public void onAttach() {
@@ -76,6 +73,14 @@ public class PigmanGuard extends Trait {
     }
 
     public void onSpawn() {
+        List<Class<? extends Trait>> toRemove = new ArrayList<>();
+        for(Trait trait: getNPC().getTraits()){
+            if(trait != this)toRemove.add(trait.getClass());
+        }
+        for(Class<? extends Trait> traitclass: toRemove){
+            getNPC().removeTrait(traitclass);
+        }
+
         getNPC().setProtected(false);
         getNPC().setFlyable(false);
 

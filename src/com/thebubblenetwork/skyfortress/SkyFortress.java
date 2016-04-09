@@ -115,11 +115,11 @@ public class SkyFortress extends BubbleGameAPI {
                 Player p = (Player)player.getPlayer();
                 p.sendMessage("");
                 p.sendMessage("                <----------------Stats---------------->");
-                p.sendMessage(ChatColor.GREEN + "You have won " + ChatColor.GRAY + player.getStats(getType().getName(), "win") + 1 + ChatColor.GREEN + " SkyFortress games");
-                p.sendMessage(ChatColor.GREEN + "You have killed " + ChatColor.GRAY + player.getStats(getType().getName(), "kill") + ChatColor.GREEN + " players");
-                p.sendMessage(ChatColor.GREEN + "You have assassinated the king " + ChatColor.GRAY + player.getStats(getType().getName(), "kingkill") + ChatColor.GREEN + " times");
-                p.sendMessage(ChatColor.GREEN + "You have slain " + ChatColor.GRAY + player.getStats(getType().getName(), "guardkill") + ChatColor.GREEN + " guards");
-                p.sendMessage(ChatColor.GREEN + "You have died " + ChatColor.GRAY + player.getStats(getType().getName(), "died") + ChatColor.GREEN + " times");
+                p.sendMessage(ChatColor.GREEN + "You have won " + ChatColor.GRAY + (int)player.getStats(getType().getName(), "win") + 1 + ChatColor.GREEN + " SkyFortress games");
+                p.sendMessage(ChatColor.GREEN + "You have killed " + ChatColor.GRAY + (int)player.getStats(getType().getName(), "kill") + ChatColor.GREEN + " players");
+                p.sendMessage(ChatColor.GREEN + "You have assassinated the king " + ChatColor.GRAY + (int)player.getStats(getType().getName(), "kingkill") + ChatColor.GREEN + " times");
+                p.sendMessage(ChatColor.GREEN + "You have slain " + ChatColor.GRAY + (int)player.getStats(getType().getName(), "guardkill") + ChatColor.GREEN + " guards");
+                p.sendMessage(ChatColor.GREEN + "You have died " + ChatColor.GRAY + (int)player.getStats(getType().getName(), "died") + ChatColor.GREEN + " times");
                 p.sendMessage("                <----------------Stats---------------->");
             }
         }
