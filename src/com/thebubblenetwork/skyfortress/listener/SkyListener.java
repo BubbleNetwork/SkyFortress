@@ -1,13 +1,14 @@
 package com.thebubblenetwork.skyfortress.listener;
 
+import com.thebubblenetwork.api.framework.player.BukkitBubblePlayer;
 import com.thebubblenetwork.api.framework.plugin.util.BubbleRunnable;
+import com.thebubblenetwork.api.game.BubbleGameAPI;
 import com.thebubblenetwork.api.game.scoreboard.GameBoard;
 import com.thebubblenetwork.skyfortress.SkyFortress;
 import com.thebubblenetwork.skyfortress.map.Cord;
 import com.thebubblenetwork.skyfortress.map.SkyFortressMap;
 import com.thebubblenetwork.skyfortress.map.SkyIsland;
 import com.thebubblenetwork.skyfortress.newmobai.PigmanGuard;
-import com.thebubblenetwork.skyfortress.scoreboard.SkyFortressBoard;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.*;
@@ -24,6 +25,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -41,7 +43,9 @@ public class SkyListener implements Listener {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e) {
+        e.setDeathMessage(null);
         final Player died = e.getEntity();
+        died.setNoDamageTicks(60);
         if (fortress.getCapManager().isCapped() && fortress.getCapManager().getCapping() == died) {
             e.setDeathMessage(null);
             e.setKeepInventory(true);
@@ -64,6 +68,18 @@ public class SkyListener implements Listener {
                     }
                 }
             }.runTask(SkyFortress.getInstance());
+            String killer;
+            if(died.getKiller() == null){
+                killer = "PvE";
+            }
+            else{
+                Player killplayer = died.getKiller();
+                BukkitBubblePlayer player = BukkitBubblePlayer.getObject(killplayer.getUniqueId());
+                killer = player.getNickName();
+                player.incrementStat(SkyFortress.getInstance().getType().getName(), "kingkill", 1);
+                killplayer.sendMessage(ChatColor.GOLD + "You killed the reining king! You have now assassinated " + ChatColor.RED + player.getStats(SkyFortress.getInstance().getType().getName(), "kingkill") + ChatColor.GOLD + " kings");
+            }
+            Bukkit.broadcastMessage(ChatColor.GOLD + ChatColor.BOLD.toString() + "King " + ChatColor.YELLOW + died.getName() + ChatColor.BLUE + " was assassinated by " + ChatColor.BLUE + killer);
         } else {
             e.setKeepInventory(false);
             e.setKeepLevel(false);
@@ -76,10 +92,25 @@ public class SkyListener implements Listener {
                     died.teleport(l);
                 }
             }.runTask(SkyFortress.getInstance());
-            if(fortress.getGame().getSpectatorList().size() == Bukkit.getOnlinePlayers().size()-1 && fortress.getCapManager().isCapped()){
+            BukkitBubblePlayer deadbubble = BukkitBubblePlayer.getObject(died.getUniqueId());
+            deadbubble.incrementStat(SkyFortress.getInstance().getType().getName(), "death", 1);
+            String killer;
+            if(died.getKiller() == null){
+                killer = "PvE";
+            }
+            else{
+                Player killplayer = died.getKiller();
+                BukkitBubblePlayer player = BukkitBubblePlayer.getObject(killplayer.getUniqueId());
+                player.incrementStat(SkyFortress.getInstance().getType().getName(), "kill", 1);
+                killer = player.getNickName();
+                killplayer.sendMessage(ChatColor.GOLD + "You killed " + ChatColor.RED + deadbubble.getNickName() + ChatColor.GOLD + "! You have now killed " + ChatColor.RED + player.getStats(SkyFortress.getInstance().getType().getName(), "kill") + ChatColor.GOLD + " players");
+            }
+            died.sendMessage(ChatColor.GOLD + "You were killed by " + ChatColor.RED + killer + ChatColor.GOLD + "! You have now died " + ChatColor.RED + deadbubble.getStats(SkyFortress.getInstance().getType().getName(), "death") + ChatColor.GOLD + " times");
+            Bukkit.broadcastMessage(ChatColor.AQUA + deadbubble.getNickName() + ChatColor.BLUE + " was slain by " + ChatColor.AQUA + killer);
+            if(fortress.getGame().getSpectatorList().size()+1 == Bukkit.getOnlinePlayers().size()-1 && fortress.getCapManager().isCapped()){
                 fortress.win(fortress.getCapManager().getCapping());
             }
-            else if(fortress.getGame().getSpectatorList().size() == Bukkit.getOnlinePlayers().size()){
+            else if(fortress.getGame().getSpectatorList().size()+1 == Bukkit.getOnlinePlayers().size()){
                 fortress.endGame();
             }
         }
@@ -199,19 +230,46 @@ public class SkyListener implements Listener {
             if(npc.hasTrait(PigmanGuard.class)){
                 e.getDrops().clear();
                 e.setDroppedExp(0);
+                if(e.getEntity().getKiller() != null){
+                    Player killer = e.getEntity().getKiller();
+                    BukkitBubblePlayer player = BukkitBubblePlayer.getObject(killer.getUniqueId());
+                    player.incrementStat(SkyFortress.getInstance().getType().getName(), "guardkill", 1);
+                    killer.sendMessage(ChatColor.GOLD + "You killed a guard! You now have " + ChatColor.RED + player.getStats(SkyFortress.getInstance().getType().getName(), "guardkill") + ChatColor.GOLD + " guard kills");
+                }
                 SkyFortress.getInstance().getGuards().respawn(npc);
             }
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onPlayerQuit(PlayerQuitEvent e){
-        if(SkyFortress.getInstance().getCapManager().isCapped() && SkyFortress.getInstance().getCapManager().getCapping() == e.getPlayer()){
+        Player p = e.getPlayer();
+        if(SkyFortress.getInstance().getCapManager().isCapped() && SkyFortress.getInstance().getCapManager().getCapping() == p){
             SkyFortress.getInstance().getCapManager().endCap();
         }
-        if(!fortress.getGame().isSpectating(e.getPlayer()) && fortress.getGame().getSpectatorList().size() >= Bukkit.getOnlinePlayers().size()){
-            fortress.endGame();
+
+        if(!SkyFortress.getInstance().getGame().isSpectating(p) && SkyFortress.getInstance().getState() == BubbleGameAPI.State.INGAME) {
+            BukkitBubblePlayer player = BukkitBubblePlayer.getObject(p.getUniqueId());
+            player.incrementStat(SkyFortress.getInstance().getType().getName(), "death", 1);
+            String killer;
+            if(p.getKiller() == null){
+                killer = "PvE";
+            }
+            else{
+                Player killplayer = p.getKiller();
+                BukkitBubblePlayer killbubble = BukkitBubblePlayer.getObject(killplayer.getUniqueId());
+                killbubble.incrementStat(SkyFortress.getInstance().getType().getName(), "kill", 1);
+                killer = killbubble.getNickName();
+                killplayer.sendMessage(ChatColor.GOLD + "You killed " + ChatColor.RED + player.getNickName() + ChatColor.GOLD + "! You have now killed " + ChatColor.RED + killbubble.getStats(SkyFortress.getInstance().getType().getName(), "kill") + ChatColor.GOLD + " players");
+            }
+            p.sendMessage(ChatColor.GOLD + "You were killed by " + ChatColor.RED + killer + ChatColor.GOLD + "! You have now died " + ChatColor.RED + player.getStats(SkyFortress.getInstance().getType().getName(), "death") + ChatColor.GOLD + " times");
+            Bukkit.broadcastMessage(ChatColor.AQUA + player.getNickName() + ChatColor.BLUE + " was slain by " + ChatColor.AQUA + killer);
+            Location l = p.getLocation();
+            for(ItemStack is: p.getInventory()){
+                l.getWorld().dropItem(l, is);
+            }
         }
+
         new BubbleRunnable(){
             public void run() {
                 for(GameBoard board: GameBoard.getBoards()){

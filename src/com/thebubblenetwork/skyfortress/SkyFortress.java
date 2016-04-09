@@ -1,12 +1,15 @@
 package com.thebubblenetwork.skyfortress;
 
 import com.thebubblenetwork.api.framework.BubbleNetwork;
+import com.thebubblenetwork.api.framework.player.BukkitBubblePlayer;
+import com.thebubblenetwork.api.framework.plugin.util.BubbleRunnable;
 import com.thebubblenetwork.api.framework.util.mc.items.ItemStackBuilder;
 import com.thebubblenetwork.api.game.BubbleGameAPI;
 import com.thebubblenetwork.api.game.kit.KitManager;
 import com.thebubblenetwork.api.game.maps.GameMap;
 import com.thebubblenetwork.api.game.maps.MapData;
 import com.thebubblenetwork.api.global.bubblepackets.messaging.messages.handshake.JoinableUpdate;
+import com.thebubblenetwork.api.global.player.BubblePlayer;
 import com.thebubblenetwork.skyfortress.chest.ChestType;
 import com.thebubblenetwork.skyfortress.chest.PregeneratedChest;
 import com.thebubblenetwork.skyfortress.chest.util.MiddleChestGeneration;
@@ -104,13 +107,25 @@ public class SkyFortress extends BubbleGameAPI {
         if(newstate == State.HIDDEN){
             registerListener(getListener());
         }
-        if(newstate == State.INGAME){
+        else if(newstate == State.INGAME){
             getGuards().spawnAll();
         }
-        if (newstate == State.LOBBY) {
+        else if(newstate == State.ENDGAME){
+            for(BubblePlayer player: BukkitBubblePlayer.getPlayerObjectMap().values()){
+                Player p = (Player)player.getPlayer();
+                p.sendMessage("");
+                p.sendMessage("                <----------------Stats---------------->");
+                p.sendMessage(ChatColor.GREEN + "You have won " + ChatColor.GRAY + player.getStats(getType().getName(), "win") + 1 + ChatColor.GREEN + " SkyFortress games");
+                p.sendMessage(ChatColor.GREEN + "You have killed " + ChatColor.GRAY + player.getStats(getType().getName(), "kill") + ChatColor.GREEN + " players");
+                p.sendMessage(ChatColor.GREEN + "You have assassinated the king " + ChatColor.GRAY + player.getStats(getType().getName(), "kingkill") + ChatColor.GREEN + " times");
+                p.sendMessage(ChatColor.GREEN + "You have slain " + ChatColor.GRAY + player.getStats(getType().getName(), "guardkill") + ChatColor.GREEN + " guards");
+                p.sendMessage(ChatColor.GREEN + "You have died " + ChatColor.GRAY + player.getStats(getType().getName(), "died") + ChatColor.GREEN + " times");
+                p.sendMessage("                <----------------Stats---------------->");
+            }
+        }
+        else if (newstate == State.LOBBY) {
             if(oldstate == State.RESTARTING){
-                new Thread(){
-                    @Override
+                new BubbleRunnable(){
                     public void run() {
                         long start = System.currentTimeMillis();
                         middlechests = new PregeneratedChest(ChestType.SINGLE, new MiddleChestGeneration(), 30);
@@ -120,12 +135,13 @@ public class SkyFortress extends BubbleGameAPI {
                         }
                         System.out.println("Doing chests took " + (System.currentTimeMillis()-start)/1000 + "s");
                     }
-                }.start();
+                }.runTaskAsynchonrously(this);
             }
+
             KitManager.getKits().add(new FarmerKit());
             KitManager.getKits().add(new BlacksmithKit());
         }
-        if (newstate == State.RESTARTING) {
+        else if (newstate == State.RESTARTING) {
             KitManager.getKits().clear();
         }
     }
@@ -151,17 +167,15 @@ public class SkyFortress extends BubbleGameAPI {
             }
             PregeneratedChest generation = chestGenerationIterator.next();
             island.fillChests(world, generation);
-            if (!playerIterator.hasNext()) {
-                break;
+            if (playerIterator.hasNext()) {
+                Player p = playerIterator.next();
+                island.setIfassigned(p);
+                Location l = island.getSpawn().toLocation(world);
+                l.setX(l.getBlockX() + 0.5D);
+                l.setZ(l.getBlockZ() + 0.5D);
+                l.setYaw(0F);
+                p.teleport(l);
             }
-            Player p = playerIterator.next();
-            island.setIfassigned(p);
-            Location l = island.getSpawn().toLocation(world);
-            l.setX(l.getBlockX() + 0.5D);
-            l.setZ(l.getBlockZ() + 0.5D);
-            l.setYaw(0F);
-            l.setPitch(l.toVector().angle(((SkyFortressMap) gameMap).getCrownLocation().toLocation(world).toVector()));
-            p.teleport(l);
         }
         Set<SkyIsland> islands = new HashSet<>();
         islands.addAll(map.getIslands());
@@ -182,6 +196,14 @@ public class SkyFortress extends BubbleGameAPI {
             }
         }
         return null;
+    }
+
+    @Override
+    public void win(Player p){
+        BukkitBubblePlayer player = BukkitBubblePlayer.getObject(p.getUniqueId());
+        player.setTokens(player.getTokens() + 2000);
+        p.sendMessage(ChatColor.GOLD + "+2000 Tokens (You now have " + ChatColor.RED + player.getTokens() + ChatColor.GOLD + ")");
+        super.win(p);
     }
 
     public PregeneratedChest getMiddlechests() {
