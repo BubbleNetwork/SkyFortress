@@ -59,6 +59,14 @@ public class SkyFortressBoard extends BoardPreset {
         }
     }
 
+    public void updateSpectators(BubbleBoardAPI api,int spectators){
+        api.getScore(this, getModule("WatchingValue")).getTeam().setSuffix(String.valueOf(spectators));
+    }
+
+    public void updateLiving(BubbleBoardAPI api, int alive){
+        api.getScore(this, getModule("AliveValue")).getTeam().setSuffix(String.valueOf(alive));
+    }
+
     public void updateTime(BubbleBoardAPI api, CapTimer timer) {
         String time = timer != null ? timer.format() : "N/A";
         api.getScore(this, getModule("CapValue2")).getTeam().setSuffix(time);

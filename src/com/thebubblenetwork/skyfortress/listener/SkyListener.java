@@ -69,6 +69,7 @@ public class SkyListener implements Listener {
                 }
             }.runTask(SkyFortress.getInstance());
             String killer;
+            BukkitBubblePlayer deadking = BukkitBubblePlayer.getObject(died.getUniqueId());
             if(died.getKiller() == null){
                 killer = "PvE";
             }
@@ -77,9 +78,9 @@ public class SkyListener implements Listener {
                 BukkitBubblePlayer player = BukkitBubblePlayer.getObject(killplayer.getUniqueId());
                 killer = player.getNickName();
                 player.incrementStat(SkyFortress.getInstance().getType().getName(), "kingkill", 1);
-                killplayer.sendMessage(ChatColor.GOLD + "You killed the reining king! You have now assassinated " + ChatColor.RED + (int)player.getStats(SkyFortress.getInstance().getType().getName(), "kingkill") + ChatColor.GOLD + " kings");
+                killplayer.sendMessage(ChatColor.GOLD + "You assassinated the king! You have now assassinated " + ChatColor.RED + (int)player.getStats(SkyFortress.getInstance().getType().getName(), "kingkill") + ChatColor.GOLD + " kings");
             }
-            Bukkit.broadcastMessage(ChatColor.GOLD + ChatColor.BOLD.toString() + "King " + ChatColor.YELLOW + died.getName() + ChatColor.BLUE + " was assassinated by " + ChatColor.BLUE + killer);
+            Bukkit.broadcastMessage( ChatColor.YELLOW + deadking.getNickName() + ChatColor.BLUE + " was assassinated by " + ChatColor.AQUA + killer);
         } else {
             e.setKeepInventory(false);
             e.setKeepLevel(false);
@@ -116,8 +117,11 @@ public class SkyListener implements Listener {
         }
         new BubbleRunnable(){
             public void run() {
+                int watching = fortress.getGame().getSpectatorList().size();
+                int playing = Bukkit.getOnlinePlayers().size()-watching;
                 for(GameBoard board: GameBoard.getBoards()){
-                    if(board.getCurrentpreset() != null)board.enable(board.getCurrentpreset());
+                    SkyFortress.getInstance().getBoard().updateSpectators(board, watching);
+                    SkyFortress.getInstance().getBoard().updateLiving(board, playing);
                 }
             }
         }.runTaskAsynchonrously(fortress);
@@ -282,6 +286,7 @@ public class SkyListener implements Listener {
     @EventHandler
     public void onEntityDamage(EntityDamageEvent e){
         if(e.getEntity() instanceof ArmorStand)e.setCancelled(true);
+        if(e.getEntity() instanceof Player && e.getCause() == EntityDamageEvent.DamageCause.VOID)e.setCancelled(true);
     }
 
     @EventHandler
