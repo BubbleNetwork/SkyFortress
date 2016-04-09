@@ -276,8 +276,11 @@ public class SkyListener implements Listener {
 
         new BubbleRunnable(){
             public void run() {
+                int watching = fortress.getGame().getSpectatorList().size();
+                int playing = Bukkit.getOnlinePlayers().size()-watching;
                 for(GameBoard board: GameBoard.getBoards()){
-                    if(board.getCurrentpreset() != null)board.enable(board.getCurrentpreset());
+                    SkyFortress.getInstance().getBoard().updateSpectators(board, watching);
+                    SkyFortress.getInstance().getBoard().updateLiving(board, playing);
                 }
             }
         }.runTaskAsynchonrously(fortress);
