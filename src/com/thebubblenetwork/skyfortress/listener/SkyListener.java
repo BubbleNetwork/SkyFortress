@@ -88,6 +88,7 @@ public class SkyListener implements Listener {
             final Location l = died.getLocation().getBlockY() > 0 ? died.getLocation() : ((SkyFortressMap) SkyFortress.getInstance().getChosenGameMap()).getCrownLocation().toLocation(SkyFortress.getInstance().getChosen());
             new BubbleRunnable() {
                 public void run() {
+                    died.teleport(l);
                     died.spigot().respawn();
                     SkyFortress.getInstance().getGame().setSpectating(died, true);
                     died.teleport(l);

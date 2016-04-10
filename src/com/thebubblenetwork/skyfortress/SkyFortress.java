@@ -106,6 +106,8 @@ public class SkyFortress extends BubbleGameAPI {
         }
         if(newstate == State.HIDDEN){
             registerListener(getListener());
+            KitManager.getKits().add(new FarmerKit());
+            KitManager.getKits().add(new BlacksmithKit());
         }
         else if(newstate == State.INGAME){
             getGuards().spawnAll();
@@ -114,17 +116,18 @@ public class SkyFortress extends BubbleGameAPI {
             for(BubblePlayer player: BukkitBubblePlayer.getPlayerObjectMap().values()){
                 Player p = (Player)player.getPlayer();
                 p.sendMessage("");
-                p.sendMessage("                <----------------Stats---------------->");
+                p.sendMessage(ChatColor.GRAY + "                <----------------Stats---------------->");
                 p.sendMessage(ChatColor.GREEN + "You have won " + ChatColor.GRAY + (int)player.getStats(getType().getName(), "win") + 1 + ChatColor.GREEN + " SkyFortress games");
                 p.sendMessage(ChatColor.GREEN + "You have killed " + ChatColor.GRAY + (int)player.getStats(getType().getName(), "kill") + ChatColor.GREEN + " players");
                 p.sendMessage(ChatColor.GREEN + "You have assassinated the king " + ChatColor.GRAY + (int)player.getStats(getType().getName(), "kingkill") + ChatColor.GREEN + " times");
                 p.sendMessage(ChatColor.GREEN + "You have slain " + ChatColor.GRAY + (int)player.getStats(getType().getName(), "guardkill") + ChatColor.GREEN + " guards");
                 p.sendMessage(ChatColor.GREEN + "You have died " + ChatColor.GRAY + (int)player.getStats(getType().getName(), "died") + ChatColor.GREEN + " times");
-                p.sendMessage("                <----------------Stats---------------->");
+                p.sendMessage(ChatColor.GRAY + "                <----------------Stats---------------->");
             }
         }
         else if (newstate == State.LOBBY) {
             if(oldstate == State.RESTARTING){
+                getListener().getLoaded().clear();
                 new BubbleRunnable(){
                     public void run() {
                         long start = System.currentTimeMillis();
@@ -137,12 +140,6 @@ public class SkyFortress extends BubbleGameAPI {
                     }
                 }.runTaskAsynchonrously(this);
             }
-
-            KitManager.getKits().add(new FarmerKit());
-            KitManager.getKits().add(new BlacksmithKit());
-        }
-        else if (newstate == State.RESTARTING) {
-            KitManager.getKits().clear();
         }
     }
 
