@@ -29,6 +29,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class SkyListener implements Listener {
 
@@ -80,7 +81,7 @@ public class SkyListener implements Listener {
                 player.incrementStat(SkyFortress.getInstance().getType().getName(), "kingkill", 1);
                 killplayer.sendMessage(ChatColor.GOLD + "You assassinated the king! You have now assassinated " + ChatColor.RED + (int)player.getStats(SkyFortress.getInstance().getType().getName(), "kingkill") + ChatColor.GOLD + " kings");
             }
-            Bukkit.broadcastMessage( ChatColor.YELLOW + deadking.getNickName() + ChatColor.BLUE + " was assassinated by " + ChatColor.AQUA + killer);
+            Bukkit.broadcastMessage(ChatColor.YELLOW + deadking.getNickName() + ChatColor.BLUE + " was assassinated by " + ChatColor.AQUA + killer);
         } else {
             e.setKeepInventory(false);
             e.setKeepLevel(false);
@@ -125,7 +126,7 @@ public class SkyListener implements Listener {
                     SkyFortress.getInstance().getBoard().updateLiving(board, playing);
                 }
             }
-        }.runTaskAsynchonrously(fortress);
+        }.runTaskLaterAsynchronously(fortress, TimeUnit.MILLISECONDS, 100L);
     }
 
     public Set<Cord> getLoaded() {
@@ -284,7 +285,7 @@ public class SkyListener implements Listener {
                     SkyFortress.getInstance().getBoard().updateLiving(board, playing);
                 }
             }
-        }.runTaskAsynchonrously(fortress);
+        }.runTaskLaterAsynchronously(fortress, TimeUnit.MILLISECONDS, 100L);
     }
 
     @EventHandler

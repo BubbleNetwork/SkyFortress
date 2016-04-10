@@ -121,7 +121,7 @@ public class SkyFortress extends BubbleGameAPI {
                 p.sendMessage(ChatColor.GREEN + "You have killed " + ChatColor.GRAY + (int)player.getStats(getType().getName(), "kill") + ChatColor.GREEN + " players");
                 p.sendMessage(ChatColor.GREEN + "You have assassinated the king " + ChatColor.GRAY + (int)player.getStats(getType().getName(), "kingkill") + ChatColor.GREEN + " times");
                 p.sendMessage(ChatColor.GREEN + "You have slain " + ChatColor.GRAY + (int)player.getStats(getType().getName(), "guardkill") + ChatColor.GREEN + " guards");
-                p.sendMessage(ChatColor.GREEN + "You have died " + ChatColor.GRAY + (int)player.getStats(getType().getName(), "died") + ChatColor.GREEN + " times");
+                p.sendMessage(ChatColor.GREEN + "You have died " + ChatColor.GRAY + (int)player.getStats(getType().getName(), "death") + ChatColor.GREEN + " times");
                 p.sendMessage(ChatColor.GRAY + "                <----------------Stats---------------->");
             }
         }
