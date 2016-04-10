@@ -29,6 +29,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class SkyListener implements Listener {
 
@@ -80,7 +81,7 @@ public class SkyListener implements Listener {
                 player.incrementStat(SkyFortress.getInstance().getType().getName(), "kingkill", 1);
                 killplayer.sendMessage(ChatColor.GOLD + "You assassinated the king! You have now assassinated " + ChatColor.RED + (int)player.getStats(SkyFortress.getInstance().getType().getName(), "kingkill") + ChatColor.GOLD + " kings");
             }
-            Bukkit.broadcastMessage( ChatColor.YELLOW + deadking.getNickName() + ChatColor.BLUE + " was assassinated by " + ChatColor.AQUA + killer);
+            Bukkit.broadcastMessage(ChatColor.YELLOW + deadking.getNickName() + ChatColor.BLUE + " was assassinated by " + ChatColor.AQUA + killer);
         } else {
             e.setKeepInventory(false);
             e.setKeepLevel(false);
@@ -88,6 +89,7 @@ public class SkyListener implements Listener {
             final Location l = died.getLocation().getBlockY() > 0 ? died.getLocation() : ((SkyFortressMap) SkyFortress.getInstance().getChosenGameMap()).getCrownLocation().toLocation(SkyFortress.getInstance().getChosen());
             new BubbleRunnable() {
                 public void run() {
+                    died.teleport(l);
                     died.spigot().respawn();
                     SkyFortress.getInstance().getGame().setSpectating(died, true);
                     died.teleport(l);
@@ -124,7 +126,7 @@ public class SkyListener implements Listener {
                     SkyFortress.getInstance().getBoard().updateLiving(board, playing);
                 }
             }
-        }.runTaskAsynchonrously(fortress);
+        }.runTaskLaterAsynchronously(fortress, TimeUnit.MILLISECONDS, 100L);
     }
 
     public Set<Cord> getLoaded() {
@@ -283,7 +285,7 @@ public class SkyListener implements Listener {
                     SkyFortress.getInstance().getBoard().updateLiving(board, playing);
                 }
             }
-        }.runTaskAsynchonrously(fortress);
+        }.runTaskLaterAsynchronously(fortress, TimeUnit.MILLISECONDS, 100L);
     }
 
     @EventHandler
@@ -304,11 +306,14 @@ public class SkyListener implements Listener {
             Player damager = (Player) e.getDamager();
 
             if(damaged == fortress.getCapManager().getCapping()){
-                fortress.getGuards().targetIfInRange(damager, 10.0);
+                fortress.getGuards().targetIfInRange(damager, 15.0);
             }
             else if(damager == fortress.getCapManager().getCapping()){
-                fortress.getGuards().targetIfInRange(damaged, 5.0);
+                fortress.getGuards().targetIfInRange(damaged, 8.0);
             }
+        }
+        else if(CitizensAPI.getNPCRegistry().isNPC(e.getDamager()) && fortress.getCapManager().isCapped() && fortress.getCapManager().getCapping() == e.getEntity()){
+            e.setCancelled(true);
         }
     }
 

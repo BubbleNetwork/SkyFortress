@@ -8,6 +8,12 @@ import org.bukkit.inventory.ItemStack;
 import java.util.*;
 
 public class ChestGeneration {
+    /*
+    How the chestgen works:
+    Each chest contains an item of a ChestSlotType
+    The itemlist contains 1 random item from each list originally submitted.
+     */
+
     private final Map<ChestSlot, List<ChestItem>> original = new HashMap<>();
     private final Map<ChestSlotType, List<ChestItem>> items = new HashMap<>();
 
@@ -57,7 +63,7 @@ public class ChestGeneration {
             ChestItem item = chose(genItemCollection);
             List<ChestItem> list = items.containsKey(item.getSlot().getType()) ? items.get(item.getSlot().getType()) : new ArrayList<ChestItem>();
             list.add(item);
-            items.put(item.getSlot().getType(), list);
+            items.putIfAbsent(item.getSlot().getType(), list);
         }
     }
 
