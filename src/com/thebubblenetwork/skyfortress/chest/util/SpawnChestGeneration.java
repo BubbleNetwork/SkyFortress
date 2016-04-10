@@ -46,32 +46,30 @@ public class SpawnChestGeneration extends ChestGeneration {
 
     static {
         //ARMOR
-        doSimple(new Material[]{Material.DIAMOND_HELMET, Material.DIAMOND_CHESTPLATE, Material.DIAMOND_LEGGINGS, Material.DIAMOND_BOOTS}, 0.15F, 0.05F, 1);
-        doSimple(new Material[]{Material.IRON_HELMET, Material.IRON_CHESTPLATE, Material.IRON_LEGGINGS, Material.IRON_BOOTS}, 0.30F, 0.05F, 1, 2);
-        doSimple(new Material[]{Material.CHAINMAIL_HELMET, Material.CHAINMAIL_CHESTPLATE, Material.CHAINMAIL_LEGGINGS, Material.CHAINMAIL_BOOTS}, 0.60F, 0.05F, 1, 2);
+        doSimple(new Material[]{Material.IRON_HELMET, Material.IRON_CHESTPLATE, Material.IRON_LEGGINGS, Material.IRON_BOOTS}, 0.30F, 0.1F, 1, 2);
+        doSimple(new Material[]{Material.CHAINMAIL_HELMET, Material.CHAINMAIL_CHESTPLATE, Material.CHAINMAIL_LEGGINGS, Material.CHAINMAIL_BOOTS}, 0.60F, 0.1F, 1, 2);
 
         //TOOLS
-        doSimple(new Material[]{Material.DIAMOND_SWORD, Material.DIAMOND_PICKAXE, Material.DIAMOND_AXE}, 0.10F, 0.05F, 1);
-        doSimple(new Material[]{Material.IRON_SWORD, Material.IRON_PICKAXE, Material.DIAMOND_AXE}, 0.30F, 0.10F, 1);
-        doSimple(new Material[]{Material.STONE_SWORD, Material.STONE_PICKAXE, Material.STONE_AXE}, 0.50F, 0.10F, 1, 2);
+        doSimple(new Material[]{Material.IRON_SWORD, Material.IRON_PICKAXE, Material.DIAMOND_AXE}, 0.3F, 0.1F, 1);
+        doSimple(new Material[]{Material.STONE_SWORD, Material.STONE_PICKAXE, Material.STONE_AXE}, 0.6F, 0.1F, 1, 2);
 
         //BOW
         ChestItem arrows = new ChestItem(ChestSlot.OTHER_WEAPON, new HashMap<Enchantment, Integer>(), new ChestItem[0], Material.ARROW, new int[]{8, 16, 32}, (short) 0, 0F);
 
-        chestItems.add(new ChestItem(ChestSlot.OTHER_WEAPON, new HashMap<Enchantment, Integer>(), new ChestItem[]{arrows}, Material.BOW, new int[]{1}, (short) 0, 0.40F));
-        chestItems.add(new ChestItem(ChestSlot.OTHER_WEAPON, new ImmutableMap.Builder<Enchantment, Integer>().put(Enchantment.ARROW_DAMAGE, 1).build(), new ChestItem[]{arrows}, Material.BOW, new int[]{1}, (short) 0, 0.20F));
-        chestItems.add(new ChestItem(ChestSlot.OTHER_WEAPON, new ImmutableMap.Builder<Enchantment, Integer>().put(Enchantment.ARROW_DAMAGE, 2).build(), new ChestItem[]{arrows}, Material.BOW, new int[]{1}, (short) 0, 0.10F));
+        chestItems.add(new ChestItem(ChestSlot.OTHER_WEAPON, new HashMap<Enchantment, Integer>(), new ChestItem[]{arrows}, Material.BOW, new int[]{1}, (short) 0, 0.2F));
+        chestItems.add(new ChestItem(ChestSlot.OTHER_WEAPON, new ImmutableMap.Builder<Enchantment, Integer>().put(Enchantment.ARROW_DAMAGE, 1).build(), new ChestItem[]{arrows}, Material.BOW, new int[]{1}, (short) 0, 0.1F));
+        chestItems.add(new ChestItem(ChestSlot.OTHER_WEAPON, new ImmutableMap.Builder<Enchantment, Integer>().put(Enchantment.ARROW_DAMAGE, 2).build(), new ChestItem[]{arrows}, Material.BOW, new int[]{1}, (short) 0, 0.05F));
 
         //ROD
         chestItems.add(new ChestItem(ChestSlot.OTHER_WEAPON, new HashMap<Enchantment, Integer>(), new ChestItem[0], Material.FISHING_ROD, new int[]{1}, (short) 0, 0.30F));
 
         //SNOWBALLS/EGGS
-        chestItems.add(new ChestItem(ChestSlot.OTHER_WEAPON, new HashMap<Enchantment, Integer>(), new ChestItem[0], Material.EGG, new int[]{8, 16, 32}, (short) 0, 0.10F));
-        chestItems.add(new ChestItem(ChestSlot.OTHER_WEAPON, new HashMap<Enchantment, Integer>(), new ChestItem[0], Material.SNOW_BALL, new int[]{8, 16, 32}, (short) 0, 0.10F));
+        chestItems.add(new ChestItem(ChestSlot.OTHER_WEAPON, new HashMap<Enchantment, Integer>(), new ChestItem[0], Material.EGG, new int[]{2, 4, 6}, (short) 0, 0.2F));
+        chestItems.add(new ChestItem(ChestSlot.OTHER_WEAPON, new HashMap<Enchantment, Integer>(), new ChestItem[0], Material.SNOW_BALL, new int[]{2, 4, 6}, (short) 0, 0.2F));
 
         //BUCKETS - USED AS A BLOCK TOOL
-        chestItems.add(new ChestItem(ChestSlot.BLOCK, new HashMap<Enchantment, Integer>(), new ChestItem[0], Material.WATER_BUCKET, new int[]{1}, (short) 0, 0.20F));
-        chestItems.add(new ChestItem(ChestSlot.OTHER_WEAPON, new HashMap<Enchantment, Integer>(), new ChestItem[0], Material.LAVA_BUCKET, new int[]{1}, (short) 0, 0.20F));
+        chestItems.add(new ChestItem(ChestSlot.OTHER_WEAPON, new HashMap<Enchantment, Integer>(), new ChestItem[0], Material.WATER_BUCKET, new int[]{1}, (short) 0, 0.2F));
+        chestItems.add(new ChestItem(ChestSlot.OTHER_WEAPON, new HashMap<Enchantment, Integer>(), new ChestItem[0], Material.LAVA_BUCKET, new int[]{1}, (short) 0, 0.2F));
 
         //FNS
         chestItems.add(new ChestItem(ChestSlot.OTHER_WEAPON, new HashMap<Enchantment, Integer>(), new ChestItem[0], Material.FLINT_AND_STEEL, new int[]{1}, (short) ((int) Material.FLINT_AND_STEEL.getMaxDurability() - 10), 0.20F));

@@ -105,8 +105,8 @@ public class MiddleChestGeneration extends ChestGeneration {
         chestItems.add(new ChestItem(ChestSlot.OTHER_WEAPON, new HashMap<Enchantment, Integer>(), new ChestItem[0], Material.ENDER_PEARL, new int[]{1, 2, 3}, (short) 0, 0.05F));
 
         //EGGS/SNOWBALLS
-        chestItems.add(new ChestItem(ChestSlot.OTHER_WEAPON, new HashMap<Enchantment, Integer>(), new ChestItem[0], Material.EGG, new int[]{64}, (short) 0, 0.25F));
-        chestItems.add(new ChestItem(ChestSlot.OTHER_WEAPON, new HashMap<Enchantment, Integer>(), new ChestItem[0], Material.SNOW_BALL, new int[]{64}, (short) 0, 0.25F));
+        chestItems.add(new ChestItem(ChestSlot.OTHER_WEAPON, new HashMap<Enchantment, Integer>(), new ChestItem[0], Material.EGG, new int[]{32,64}, (short) 0, 0.25F));
+        chestItems.add(new ChestItem(ChestSlot.OTHER_WEAPON, new HashMap<Enchantment, Integer>(), new ChestItem[0], Material.SNOW_BALL, new int[]{32,64}, (short) 0, 0.25F));
 
         //POTIONS
         doPotion(new int[]{3}, PotionType.INSTANT_HEAL, true, 1, false, 0.2F);

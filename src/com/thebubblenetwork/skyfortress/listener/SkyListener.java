@@ -304,11 +304,14 @@ public class SkyListener implements Listener {
             Player damager = (Player) e.getDamager();
 
             if(damaged == fortress.getCapManager().getCapping()){
-                fortress.getGuards().targetIfInRange(damager, 10.0);
+                fortress.getGuards().targetIfInRange(damager, 15.0);
             }
             else if(damager == fortress.getCapManager().getCapping()){
-                fortress.getGuards().targetIfInRange(damaged, 5.0);
+                fortress.getGuards().targetIfInRange(damaged, 8.0);
             }
+        }
+        else if(CitizensAPI.getNPCRegistry().isNPC(e.getDamager()) && fortress.getCapManager().isCapped() && fortress.getCapManager().getCapping() == e.getEntity()){
+            e.setCancelled(true);
         }
     }
 
