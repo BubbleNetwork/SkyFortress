@@ -167,7 +167,7 @@ public class PigmanGuard extends Trait {
             if (getNPC() != null && getNPC().hasTrait(PigmanGuard.class) && getNPC().isSpawned() && getNPC().getNavigator() != null && getNPC().getEntity() != null) {
                 this.target = null;
                 for (Player entity : getNPC().getEntity().getWorld().getPlayers()) {
-                    if (entity.getLocation().toVector().distance(guard) <= DISTFROMPOST) {
+                    if (!SkyFortress.getInstance().getGame().isSpectating(entity) && !(SkyFortress.getInstance().getCapManager().isCapped() && SkyFortress.getInstance().getCapManager().getCapping() == entity) && entity.getLocation().toVector().distance(guard) <= DISTFROMPOST) {
                         this.target = entity;
                         break;
                     }

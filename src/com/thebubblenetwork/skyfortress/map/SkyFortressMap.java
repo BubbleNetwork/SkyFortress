@@ -49,7 +49,6 @@ public class SkyFortressMap extends GameMap {
 
         LocationObject crownlocation = LocationUtil.fromConfig(configurationSection.getConfigurationSection("crown"));
         map.put("crown", crownlocation);
-
         return map;
     }
 

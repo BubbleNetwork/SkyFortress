@@ -178,9 +178,11 @@ public class SkyFortress extends BubbleGameAPI {
         islands.addAll(map.getIslands());
         this.islands = islands;
         listener.getLoaded().addAll(map.getCordSet());
-        resetCrown();
         pregens.clear();
         guards = new GuardManager(world, map.getGuardLocations());
+        world.setSpawnLocation((int)map.getCrownLocation().getX(), (int)map.getCrownLocation().getY(), (int)map.getCrownLocation().getZ());
+        world.setKeepSpawnInMemory(true);
+        resetCrown();
     }
 
     public SkyIsland getIfAssigned(Player p) {

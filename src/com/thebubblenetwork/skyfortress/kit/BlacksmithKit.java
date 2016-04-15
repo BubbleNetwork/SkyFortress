@@ -16,7 +16,7 @@ import java.util.Map;
 public class BlacksmithKit extends Kit {
     private static ItemStackBuilder ANVIL = new ItemStackBuilder(Material.ANVIL).withName(ChatColor.GRAY + "A blacksmith's anvil");
     private static ItemStackBuilder IRON = new ItemStackBuilder(Material.IRON_INGOT).withAmount(8);
-    private static ItemStackBuilder EXP = new ItemStackBuilder(Material.EXP_BOTTLE).withAmount(8);
+    private static ItemStackBuilder EXP = new ItemStackBuilder(Material.EXP_BOTTLE).withAmount(6);
     private static ItemStackBuilder CRAFTINGBENCH = new ItemStackBuilder(Material.WORKBENCH).withName(ChatColor.GRAY + "A crafting bench");
 
     private static ItemStack getEnchantmentBook(Map<Enchantment,Integer> enchantmentIntegerMap){
@@ -41,31 +41,31 @@ public class BlacksmithKit extends Kit {
                 DEFAULTBUILD.clone()
                 .build(),
                 DEFAULTBUILD.clone()
-                        .withT(1, IRON.clone().withAmount(16).build())
-                        .withT(2, EXP.clone().withAmount(16).build())
-                        .withT(3, getEnchantmentBook(new ImmutableMap.Builder<Enchantment, Integer>().put(Enchantment.PROTECTION_ENVIRONMENTAL, 3).put(Enchantment.DAMAGE_ALL, 1).put(Enchantment.THORNS, 1).build()))
+                        .withT(1, IRON.clone().withAmount(12).build())
+                        .withT(2, EXP.clone().withAmount(8).build())
+                        .withT(3, getEnchantmentBook(new ImmutableMap.Builder<Enchantment, Integer>().put(Enchantment.PROTECTION_ENVIRONMENTAL, 2).put(Enchantment.DAMAGE_ALL, 1).build()))
                         .build(),
                 DEFAULTBUILD.clone()
-                        .withT(1, IRON.clone().withAmount(24).build())
-                        .withT(2, EXP.clone().withAmount(24).build())
+                        .withT(1, IRON.clone().withAmount(16).build())
+                        .withT(2, EXP.clone().withAmount(10).build())
                         .withT(3, getEnchantmentBook(new ImmutableMap.Builder<Enchantment, Integer>().put(Enchantment.PROTECTION_ENVIRONMENTAL, 4).put(Enchantment.DAMAGE_ALL, 2).put(Enchantment.THORNS, 1).build()))
                         .build(),
                 DEFAULTBUILD.clone()
+                        .withT(1, IRON.clone().withAmount(20).build())
+                        .withT(2, EXP.clone().withAmount(12).build())
+                        .withT(3, getEnchantmentBook(new ImmutableMap.Builder<Enchantment, Integer>().put(Enchantment.PROTECTION_ENVIRONMENTAL, 3).put(Enchantment.DAMAGE_ALL, 2).put(Enchantment.THORNS, 1).put(Enchantment.ARROW_DAMAGE, 1).build()))
+                        .build(),
+                DEFAULTBUILD.clone()
+                        .withT(1, IRON.clone().withAmount(24).build())
+                        .withT(2, EXP.clone().withAmount(14).build())
+                        .withT(3, getEnchantmentBook(new ImmutableMap.Builder<Enchantment, Integer>().put(Enchantment.PROTECTION_ENVIRONMENTAL, 4).put(Enchantment.DAMAGE_ALL, 2).put(Enchantment.THORNS, 1).put(Enchantment.ARROW_DAMAGE, 2).build()))
+                        .build(),
+                DEFAULTBUILD.clone()
                         .withT(1, IRON.clone().withAmount(32).build())
-                        .withT(2, EXP.clone().withAmount(32).build())
-                        .withT(3, getEnchantmentBook(new ImmutableMap.Builder<Enchantment, Integer>().put(Enchantment.PROTECTION_ENVIRONMENTAL, 4).put(Enchantment.DAMAGE_ALL, 2).put(Enchantment.THORNS, 2).build()))
-                        .build(),
-                DEFAULTBUILD.clone()
-                        .withT(1, IRON.clone().withAmount(48).build())
-                        .withT(2, EXP.clone().withAmount(32).build())
-                        .withT(3, getEnchantmentBook(new ImmutableMap.Builder<Enchantment, Integer>().put(Enchantment.PROTECTION_ENVIRONMENTAL, 4).put(Enchantment.DAMAGE_ALL, 2).put(Enchantment.THORNS, 2).put(Enchantment.FIRE_ASPECT, 1).build()))
-                        .build(),
-                DEFAULTBUILD.clone()
-                        .withT(1, IRON.clone().withAmount(64).build())
-                        .withT(2, EXP.clone().withAmount(32).build())
-                        .withT(3, getEnchantmentBook(new ImmutableMap.Builder<Enchantment, Integer>().put(Enchantment.PROTECTION_ENVIRONMENTAL, 4).put(Enchantment.DAMAGE_ALL, 3).put(Enchantment.THORNS, 2).put(Enchantment.FIRE_ASPECT, 2).build()))
+                        .withT(2, EXP.clone().withAmount(16).build())
+                        .withT(3, getEnchantmentBook(new ImmutableMap.Builder<Enchantment, Integer>().put(Enchantment.PROTECTION_ENVIRONMENTAL, 5).put(Enchantment.DAMAGE_ALL, 3).put(Enchantment.THORNS, 2).put(Enchantment.ARROW_DAMAGE, 3).build()))
                         .build()
         )
-                , "BlackSmith", new String[]{"Contains some iron, xp, an anvil and and some enchanted books", "Cost: 1000 Tokens"}, 1000);
+                , "BlackSmith", new String[]{"Contains some iron, xp, an anvil and and some enchanted books"}, 1000);
     }
 }
