@@ -79,6 +79,8 @@ public class SkyListener implements Listener {
                 BukkitBubblePlayer player = BukkitBubblePlayer.getObject(killplayer.getUniqueId());
                 killer = player.getNickName();
                 player.incrementStat(SkyFortress.getInstance().getType().getName(), "kingkill", 1);
+                player.setTokens(player.getTokens() + 20);
+                killplayer.sendMessage(ChatColor.GOLD + "+20 Tokens");
                 killplayer.sendMessage(ChatColor.GOLD + "You assassinated the king! You have now assassinated " + ChatColor.RED + (int)player.getStats(SkyFortress.getInstance().getType().getName(), "kingkill") + ChatColor.GOLD + " kings");
             }
             Bukkit.broadcastMessage(ChatColor.YELLOW + deadking.getNickName() + ChatColor.BLUE + " was assassinated by " + ChatColor.AQUA + killer);
@@ -106,6 +108,8 @@ public class SkyListener implements Listener {
                 BukkitBubblePlayer player = BukkitBubblePlayer.getObject(killplayer.getUniqueId());
                 player.incrementStat(SkyFortress.getInstance().getType().getName(), "kill", 1);
                 killer = player.getNickName();
+                player.setTokens(player.getTokens() + 100);
+                killplayer.sendMessage(ChatColor.GOLD + "+100 Tokens");
                 killplayer.sendMessage(ChatColor.GOLD + "You killed " + ChatColor.RED + deadbubble.getNickName() + ChatColor.GOLD + "! You have now killed " + ChatColor.RED + (int)player.getStats(SkyFortress.getInstance().getType().getName(), "kill") + ChatColor.GOLD + " players");
             }
             died.sendMessage(ChatColor.GOLD + "You were killed by " + ChatColor.RED + killer + ChatColor.GOLD + "! You have now died " + ChatColor.RED + (int)deadbubble.getStats(SkyFortress.getInstance().getType().getName(), "death") + ChatColor.GOLD + " times");
@@ -240,6 +244,8 @@ public class SkyListener implements Listener {
                     Player killer = e.getEntity().getKiller();
                     BukkitBubblePlayer player = BukkitBubblePlayer.getObject(killer.getUniqueId());
                     player.incrementStat(SkyFortress.getInstance().getType().getName(), "guardkill", 1);
+                    player.setTokens(player.getTokens() + 5);
+                    killer.sendMessage(ChatColor.GOLD + "+5 Tokens");
                     killer.sendMessage(ChatColor.GOLD + "You killed a guard! You now have " + ChatColor.RED + (int)player.getStats(SkyFortress.getInstance().getType().getName(), "guardkill") + ChatColor.GOLD + " guard kills");
                 }
                 SkyFortress.getInstance().getGuards().respawn(npc);
@@ -266,6 +272,8 @@ public class SkyListener implements Listener {
                 BukkitBubblePlayer killbubble = BukkitBubblePlayer.getObject(killplayer.getUniqueId());
                 killbubble.incrementStat(SkyFortress.getInstance().getType().getName(), "kill", 1);
                 killer = killbubble.getNickName();
+                killbubble.setTokens(killbubble.getTokens() + 100);
+                killplayer.sendMessage(ChatColor.GOLD + "+100 Tokens");
                 killplayer.sendMessage(ChatColor.GOLD + "You killed " + ChatColor.RED + player.getNickName() + ChatColor.GOLD + "! You have now killed " + ChatColor.RED + (int)killbubble.getStats(SkyFortress.getInstance().getType().getName(), "kill") + ChatColor.GOLD + " players");
             }
             p.sendMessage(ChatColor.GOLD + "You were killed by " + ChatColor.RED + killer + ChatColor.GOLD + "! You have now died " + ChatColor.RED + (int)player.getStats(SkyFortress.getInstance().getType().getName(), "death") + ChatColor.GOLD + " times");
