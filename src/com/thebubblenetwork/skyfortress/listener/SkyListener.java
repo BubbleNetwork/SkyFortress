@@ -243,10 +243,15 @@ public class SkyListener implements Listener {
                 if(e.getEntity().getKiller() != null){
                     Player killer = e.getEntity().getKiller();
                     BukkitBubblePlayer player = BukkitBubblePlayer.getObject(killer.getUniqueId());
-                    player.incrementStat(SkyFortress.getInstance().getType().getName(), "guardkill", 1);
-                    player.setTokens(player.getTokens() + 5);
-                    killer.sendMessage(ChatColor.GOLD + "+5 Tokens");
-                    killer.sendMessage(ChatColor.GOLD + "You killed a guard! You now have " + ChatColor.RED + (int)player.getStats(SkyFortress.getInstance().getType().getName(), "guardkill") + ChatColor.GOLD + " guard kills");
+                    if(fortress.getCapManager().isCapped() && fortress.getCapManager().getCapping() == killer){
+                        killer.sendMessage(ChatColor.GOLD + "You killed one of your own subjects!");
+                    }
+                    else {
+                        player.incrementStat(SkyFortress.getInstance().getType().getName(), "guardkill", 1);
+                        player.setTokens(player.getTokens() + 5);
+                        killer.sendMessage(ChatColor.GOLD + "+5 Tokens");
+                        killer.sendMessage(ChatColor.GOLD + "You killed a guard! You now have " + ChatColor.RED + (int) player.getStats(SkyFortress.getInstance().getType().getName(), "guardkill") + ChatColor.GOLD + " guard kills");
+                    }
                 }
                 SkyFortress.getInstance().getGuards().respawn(npc);
             }

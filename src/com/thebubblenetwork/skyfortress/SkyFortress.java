@@ -104,12 +104,7 @@ public class SkyFortress extends BubbleGameAPI {
         } catch (IOException e) {
             BubbleNetwork.getInstance().getPlugin().getLogger().log(Level.WARNING, "Could not send joinable update for skyfortress", e);
         }
-        if(newstate == State.HIDDEN){
-            registerListener(getListener());
-            KitManager.getKits().add(new FarmerKit());
-            KitManager.getKits().add(new BlacksmithKit());
-        }
-        else if(newstate == State.INGAME){
+        if(newstate == State.INGAME){
             getGuards().spawnAll();
         }
         else if(newstate == State.ENDGAME){
@@ -243,7 +238,15 @@ public class SkyFortress extends BubbleGameAPI {
         };
     }
 
-    public CraftArmorStand spawnHologram(Location l,String text){
+    @Override
+    public void onEnable() {
+        super.onEnable();
+        registerListener(getListener());
+        KitManager.getKits().add(new FarmerKit());
+        KitManager.getKits().add(new BlacksmithKit());
+    }
+
+    public CraftArmorStand spawnHologram(Location l, String text){
         CraftArmorStand stand = (CraftArmorStand) l.getWorld().spawn(l,ArmorStand.class);
         stand.setGravity(false);
         stand.setVisible(false);
