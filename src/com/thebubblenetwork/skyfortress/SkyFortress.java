@@ -195,8 +195,7 @@ public class SkyFortress extends BubbleGameAPI {
     @Override
     public void win(Player p){
         BukkitBubblePlayer player = BukkitBubblePlayer.getObject(p.getUniqueId());
-        player.setTokens(player.getTokens() + 2000);
-        p.sendMessage(ChatColor.GOLD + "+2000 Tokens (You now have " + ChatColor.RED + player.getTokens() + ChatColor.GOLD + ")");
+        player.setTokens(player.getTokens() + 500);
         super.win(p);
     }
 
