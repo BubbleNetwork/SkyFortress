@@ -33,6 +33,7 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -151,6 +152,7 @@ public class SkyFortress extends BubbleGameAPI {
             throw new IllegalArgumentException("Invalid map");
         }
         SkyFortressMap map = (SkyFortressMap) gameMap;
+        Collections.shuffle(map.getIslands());
         Iterator<PregeneratedChest> chestGenerationIterator = pregens.iterator();
         Iterator<? extends Player> playerIterator = Bukkit.getOnlinePlayers().iterator();
         for (SkyIsland island : map.getIslands()) {
