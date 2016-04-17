@@ -21,8 +21,10 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -334,6 +336,20 @@ public class SkyListener implements Listener {
     public void onKingTarget(EntityTargetEvent event){
         if(fortress.getCapManager().isCapped() && fortress.getCapManager().getCapping() == event.getEntity()){
             event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerCraft(CraftItemEvent e){
+        if(e.getRecipe().getResult() != null && e.getRecipe().getResult().getType() == Material.CHEST){
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onItemPickup(PlayerPickupItemEvent e){
+        if(e.getItem() != null && e.getItem().getItemStack() != null && e.getItem().getItemStack().getType() == Material.CHEST) {
+            e.setCancelled(true);
         }
     }
 }
