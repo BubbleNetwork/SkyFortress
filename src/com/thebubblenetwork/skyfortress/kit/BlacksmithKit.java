@@ -14,10 +14,12 @@ import java.util.Arrays;
 import java.util.Map;
 
 public class BlacksmithKit extends Kit {
-    private static ItemStackBuilder ANVIL = new ItemStackBuilder(Material.ANVIL).withName(ChatColor.GRAY + "A blacksmith's anvil");
+    private static ChatColor COLOR = ChatColor.GOLD;
+
+    private static ItemStackBuilder ANVIL = new ItemStackBuilder(Material.ANVIL).withName(COLOR + "A blacksmith's anvil");
     private static ItemStackBuilder IRON = new ItemStackBuilder(Material.IRON_INGOT).withAmount(8);
     private static ItemStackBuilder EXP = new ItemStackBuilder(Material.EXP_BOTTLE).withAmount(6);
-    private static ItemStackBuilder CRAFTINGBENCH = new ItemStackBuilder(Material.WORKBENCH).withName(ChatColor.GRAY + "A crafting bench");
+    private static ItemStackBuilder CRAFTINGBENCH = new ItemStackBuilder(Material.WORKBENCH).withName(COLOR + "A crafting bench");
 
     private static ItemStack getEnchantmentBook(Map<Enchantment,Integer> enchantmentIntegerMap){
         ItemStack stack = new ItemStackBuilder(Material.ENCHANTED_BOOK).build();

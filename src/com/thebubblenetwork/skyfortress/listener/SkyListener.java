@@ -22,6 +22,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -340,9 +341,9 @@ public class SkyListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerCraft(CraftItemEvent e){
-        if(e.getRecipe().getResult() != null && e.getRecipe().getResult().getType() == Material.CHEST){
-            e.setCancelled(true);
+    public void onPlayerCraft(InventoryClickEvent e){
+        if(e.getCurrentItem() != null && e.getCurrentItem().getType() == Material.CHEST){
+            e.setCurrentItem(null);
         }
     }
 

@@ -8,16 +8,17 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
 
-public class ChestItem {
-    private ChestSlot slot;
+@Deprecated
+public class __INVALID__ChestItem {
+    private __INVALID__ChestSlot slot;
     private double percent;
     private int stacksize[];
     private short data;
     private Material material;
-    private ChestItem[] pairs;
+    private __INVALID__ChestItem[] pairs;
     private Map<Enchantment, Integer> enchantmentIntegerMap;
 
-    public ChestItem(ChestSlot slot, Map<Enchantment, Integer> enchantmentIntegerMap, ChestItem[] pairs, Material material, int[] stacksize, short data, double percent) {
+    public __INVALID__ChestItem(__INVALID__ChestSlot slot, Map<Enchantment, Integer> enchantmentIntegerMap, __INVALID__ChestItem[] pairs, Material material, int[] stacksize, short data, double percent) {
         this.slot = slot;
         this.enchantmentIntegerMap = enchantmentIntegerMap;
         this.pairs = pairs;
@@ -47,7 +48,7 @@ public class ChestItem {
         return material;
     }
 
-    public ChestSlot getSlot() {
+    public __INVALID__ChestSlot getSlot() {
         return slot;
     }
 
@@ -55,7 +56,7 @@ public class ChestItem {
         return percent;
     }
 
-    public ChestItem[] getPairs() {
+    public __INVALID__ChestItem[] getPairs() {
         return pairs;
     }
 

@@ -35,7 +35,7 @@ public class FarmerKit extends Kit {
     }
 
     public FarmerKit() {
-        super(Material.STAINED_GLASS_PANE,
+        super(Material.LEATHER_CHESTPLATE,
                 Arrays.asList(
                         DEFAULTBUILD.build(),
                         DEFAULTBUILD.clone()
@@ -52,7 +52,7 @@ public class FarmerKit extends Kit {
                                 .withT(2, PICK.clone().withType(Material.STONE_PICKAXE).withEnchantment(Enchantment.DIG_SPEED, 1).build())
                                 .build(),
                         DEFAULTBUILD.clone()
-                                .withT(0, SWORD.clone().withEnchantment(Enchantment.DAMAGE_ALL, 1).build())
+                                .withT(0, SWORD.clone().withType(Material.STONE_SWORD).withEnchantment(Enchantment.DAMAGE_ALL, 1).build())
                                 .withT(1, AXE.clone().withType(Material.STONE_AXE).withEnchantment(Enchantment.DIG_SPEED, 1).build())
                                 .withT(2, PICK.clone().withType(Material.STONE_PICKAXE).withEnchantment(Enchantment.DIG_SPEED, 1).build())
                                 .withT(3, CARROTS.clone().withType(Material.GOLDEN_CARROT).build())

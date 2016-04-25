@@ -2,35 +2,36 @@ package com.thebubblenetwork.skyfortress.chest.gen;
 
 import com.google.common.collect.Iterables;
 import com.thebubblenetwork.api.framework.BubbleNetwork;
-import com.thebubblenetwork.skyfortress.chest.ChestType;
+import com.thebubblenetwork.skyfortress.chest.__INVALID__ChestType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
-public class ChestGeneration {
+@Deprecated
+public class __INVLAID__ChestGeneration {
     /*
     How the chestgen works:
     Each chest contains an item of a ChestSlotType
     The itemlist contains 1 random item from each list originally submitted.
      */
 
-    private final Map<ChestSlot, List<ChestItem>> original = new HashMap<>();
-    private final Map<ChestSlotType, List<ChestItem>> items = new HashMap<>();
+    private final Map<__INVALID__ChestSlot, List<__INVALID__ChestItem>> original = new HashMap<>();
+    private final Map<__INVALID__ChestSlotType, List<__INVALID__ChestItem>> items = new HashMap<>();
 
-    public ChestGeneration(Set<ChestItem> items) {
-        for (ChestItem item : items) {
-            List<ChestItem> list = original.containsKey(item.getSlot()) ? original.get(item.getSlot()) : new ArrayList<ChestItem>();
+    public __INVLAID__ChestGeneration(Set<__INVALID__ChestItem> items) {
+        for (__INVALID__ChestItem item : items) {
+            List<__INVALID__ChestItem> list = original.containsKey(item.getSlot()) ? original.get(item.getSlot()) : new ArrayList<__INVALID__ChestItem>();
             list.add(item);
             original.put(item.getSlot(), list);
         }
         fill();
     }
 
-    public Map<ChestSlotType, List<ChestItem>> getItems() {
+    public Map<__INVALID__ChestSlotType, List<__INVALID__ChestItem>> getItems() {
         return items;
     }
 
-    private ChestItem chose(Collection<ChestItem> items) {
+    private __INVALID__ChestItem chose(Collection<__INVALID__ChestItem> items) {
         int size = items.size();
         if (items.isEmpty()) {
             throw new IllegalArgumentException("Not enough items");
@@ -40,13 +41,13 @@ public class ChestGeneration {
         }
         double percentsize = 0.0D;
         //Find the total percentage
-        for (ChestItem item : items) {
+        for (__INVALID__ChestItem item : items) {
             percentsize += item.getPercent();
         }
         double currentchance = 0.0D;
         //Get a number between 0 and percentsize
         double chosen = BubbleNetwork.getRandom().nextDouble() * percentsize;
-        for (ChestItem item : items) {
+        for (__INVALID__ChestItem item : items) {
             //Add to currentchance the total percentage
             currentchance += percentsize / item.getPercent();
             //If the currentchance is NOW above the random number it has been selected
@@ -59,35 +60,35 @@ public class ChestGeneration {
     }
 
     public void fill() {
-        for (Collection<ChestItem> genItemCollection : original.values()) {
-            ChestItem item = chose(genItemCollection);
-            List<ChestItem> list = items.containsKey(item.getSlot().getType()) ? items.get(item.getSlot().getType()) : new ArrayList<ChestItem>();
+        for (Collection<__INVALID__ChestItem> genItemCollection : original.values()) {
+            __INVALID__ChestItem item = chose(genItemCollection);
+            List<__INVALID__ChestItem> list = items.containsKey(item.getSlot().getType()) ? items.get(item.getSlot().getType()) : new ArrayList<__INVALID__ChestItem>();
             list.add(item);
-            items.putIfAbsent(item.getSlot().getType(), list);
+            items.put(item.getSlot().getType(), list);
         }
     }
 
-    public void fill(List<ChestItem> addto, ChestSlotType type) {
-        for (Map.Entry<ChestSlot, List<ChestItem>> entry : original.entrySet()) {
+    public void fill(List<__INVALID__ChestItem> addto, __INVALID__ChestSlotType type) {
+        for (Map.Entry<__INVALID__ChestSlot, List<__INVALID__ChestItem>> entry : original.entrySet()) {
             if (entry.getKey().getType() == type) {
-                ChestItem item = chose(entry.getValue());
+                __INVALID__ChestItem item = chose(entry.getValue());
                 addto.add(item);
             }
         }
     }
 
-    public ItemStack[] generate(ChestType type) {
+    public ItemStack[] generate(__INVALID__ChestType type) {
         //Find our items
-        Set<ChestItem> chosen = new HashSet<>();
-        for (Map.Entry<ChestSlotType, List<ChestItem>> entry : items.entrySet()) {
-            List<ChestItem> items = entry.getValue();
+        Set<__INVALID__ChestItem> chosen = new HashSet<>();
+        for (Map.Entry<__INVALID__ChestSlotType, List<__INVALID__ChestItem>> entry : items.entrySet()) {
+            List<__INVALID__ChestItem> items = entry.getValue();
             if (items.isEmpty()) {
                 continue;
             }
             Collections.shuffle(items);
 
             //Removing from original
-            ChestItem item = items.remove(0);
+            __INVALID__ChestItem item = items.remove(0);
 
             //Adding to chosen
             chosen.add(item);
@@ -108,7 +109,7 @@ public class ChestGeneration {
         ItemStack[] itemStacks = new ItemStack[type.getSize()];
 
         //Copying into slots
-        for (ChestItem item : chosen) {
+        for (__INVALID__ChestItem item : chosen) {
             itemStacks[list.remove(0)] = item.create();
         }
         return itemStacks;

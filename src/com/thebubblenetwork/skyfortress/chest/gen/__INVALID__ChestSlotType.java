@@ -1,5 +1,6 @@
 package com.thebubblenetwork.skyfortress.chest.gen;
 
-public enum ChestSlotType {
+@Deprecated
+public enum __INVALID__ChestSlotType {
     ARMOR, TOOL, WEAPON, OTHER;
 }

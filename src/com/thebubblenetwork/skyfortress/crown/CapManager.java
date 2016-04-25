@@ -26,8 +26,7 @@ public class CapManager {
         return p.getName();
     }
 
-    private static PotionEffect SLOWNESS = new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 0);
-    private static PotionEffect STRENGTH = new PotionEffect(PotionEffectType.INCREASE_DAMAGE, Integer.MAX_VALUE, 0);
+    private static PotionEffect SLOWNESS = new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 1);
     private Player capping = null;
     private CapTimer timer;
 
@@ -38,7 +37,6 @@ public class CapManager {
     public void endCap() {
         getCapping();
         capping.removePotionEffect(SLOWNESS.getType());
-        capping.removePotionEffect(STRENGTH.getType());
         timer.cancel();
         Messages.broadcastMessageTitle("", ChatColor.GOLD + getNick(capping) + ChatColor.YELLOW + " lost the crown!", new TimingTicks(TimeUnit.MILLISECONDS,250, 1000, 750));
         SkyFortress.getInstance().resetCrown();
@@ -59,7 +57,7 @@ public class CapManager {
         }
         capping = p;
         timer = new CapTimer();
-        p.addPotionEffects(Arrays.asList(SLOWNESS, STRENGTH));
+        p.addPotionEffect(SLOWNESS);
         Messages.broadcastMessageTitle("", ChatColor.GOLD + getNick(p) + ChatColor.YELLOW + " is now king!", new TimingTicks(TimeUnit.MILLISECONDS,250, 1000, 750));
         SkyFortress.getInstance().getItem().cancel();
         updateScoreboards(null, capping);

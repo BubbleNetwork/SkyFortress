@@ -1,10 +1,11 @@
 package com.thebubblenetwork.skyfortress.chest;
 
-public enum ChestType {
+@Deprecated
+public enum __INVALID__ChestType {
     SINGLE(3);
     private int size;
 
-    ChestType(int rows) {
+    __INVALID__ChestType(int rows) {
         size = rows * 9;
     }
 

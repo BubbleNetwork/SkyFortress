@@ -121,7 +121,7 @@ public class PigmanGuard extends Trait {
         }
     }
 
-    private static double DISTFROMPOST = 7.0D;
+    private static double DISTFROMPOST = 10.0D;
 
     private class GuardLookGoal extends BehaviorGoalAdapter{
         private boolean finished = false;
@@ -164,7 +164,7 @@ public class PigmanGuard extends Trait {
         }
 
         public boolean shouldExecute() {
-            if (getNPC() != null && getNPC().hasTrait(PigmanGuard.class) && getNPC().isSpawned() && getNPC().getNavigator() != null && getNPC().getEntity() != null) {
+            if (getNPC() != null && getNPC().isSpawned() && getNPC().getNavigator() != null && getNPC().getEntity() != null) {
                 this.target = null;
                 for (Player entity : getNPC().getEntity().getWorld().getPlayers()) {
                     if (!SkyFortress.getInstance().getGame().isSpectating(entity) && !(SkyFortress.getInstance().getCapManager().isCapped() && SkyFortress.getInstance().getCapManager().getCapping() == entity) && entity.getLocation().toVector().distance(guard) <= DISTFROMPOST) {
@@ -184,6 +184,7 @@ public class PigmanGuard extends Trait {
                     public void onCompletion(CancelReason cancelReason) {
                         GuardTargetGoal.this.reason = cancelReason;
                         GuardTargetGoal.this.finished = true;
+                        System.out.println("[DEBUG] Target was finished because " + (reason == null ? "finish" : reason.toString()));
                     }
                 });
                 return true;

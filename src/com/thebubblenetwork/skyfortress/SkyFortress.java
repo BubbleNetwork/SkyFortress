@@ -10,10 +10,10 @@ import com.thebubblenetwork.api.game.maps.GameMap;
 import com.thebubblenetwork.api.game.maps.MapData;
 import com.thebubblenetwork.api.global.bubblepackets.messaging.messages.handshake.JoinableUpdate;
 import com.thebubblenetwork.api.global.player.BubblePlayer;
-import com.thebubblenetwork.skyfortress.chest.ChestType;
+import com.thebubblenetwork.skyfortress.chest.__INVALID__ChestType;
 import com.thebubblenetwork.skyfortress.chest.PregeneratedChest;
-import com.thebubblenetwork.skyfortress.chest.util.MiddleChestGeneration;
-import com.thebubblenetwork.skyfortress.chest.util.SpawnChestGeneration;
+import com.thebubblenetwork.skyfortress.chest.util.__INVALID__MiddleChestGeneration;
+import com.thebubblenetwork.skyfortress.chest.util.__INVALID__SpawnChestGeneration;
 import com.thebubblenetwork.skyfortress.crown.CapManager;
 import com.thebubblenetwork.skyfortress.crown.CrownItem;
 import com.thebubblenetwork.skyfortress.kit.BlacksmithKit;
@@ -79,9 +79,9 @@ public class SkyFortress extends BubbleGameAPI {
         instance = this;
         board = new SkyFortressBoard();
         long millis = System.currentTimeMillis();
-        middlechests = new PregeneratedChest(ChestType.SINGLE, new MiddleChestGeneration(), 30);
+        middlechests = new PregeneratedChest(__INVALID__ChestType.SINGLE, new __INVALID__MiddleChestGeneration(), 30);
         for (int i = 0; i < getType().getMaxPlayers(); i++) {
-            pregens.add(new PregeneratedChest(ChestType.SINGLE, new SpawnChestGeneration(), 3));
+            pregens.add(new PregeneratedChest(__INVALID__ChestType.SINGLE, new __INVALID__SpawnChestGeneration(), 3));
         }
         long diff = System.currentTimeMillis() - millis;
         BubbleNetwork.getInstance().getPlugin().getLogger().log(Level.INFO, "Genning chests took {0}seconds", (double) diff / 1000D);
@@ -127,10 +127,10 @@ public class SkyFortress extends BubbleGameAPI {
                 new BubbleRunnable(){
                     public void run() {
                         long start = System.currentTimeMillis();
-                        middlechests = new PregeneratedChest(ChestType.SINGLE, new MiddleChestGeneration(), 30);
+                        middlechests = new PregeneratedChest(__INVALID__ChestType.SINGLE, new __INVALID__MiddleChestGeneration(), 30);
                         pregens.clear();
                         for (int i = 0; i < getType().getMaxPlayers(); i++) {
-                            pregens.add(new PregeneratedChest(ChestType.SINGLE, new SpawnChestGeneration(), 3));
+                            pregens.add(new PregeneratedChest(__INVALID__ChestType.SINGLE, new __INVALID__SpawnChestGeneration(), 3));
                         }
                         System.out.println("Doing chests took " + (System.currentTimeMillis()-start)/1000 + "s");
                     }

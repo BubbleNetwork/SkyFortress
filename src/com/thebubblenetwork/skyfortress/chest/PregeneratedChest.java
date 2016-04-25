@@ -1,6 +1,6 @@
 package com.thebubblenetwork.skyfortress.chest;
 
-import com.thebubblenetwork.skyfortress.chest.gen.ChestGeneration;
+import com.thebubblenetwork.skyfortress.chest.gen.__INVLAID__ChestGeneration;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -16,11 +16,11 @@ import java.util.List;
  */
 
 public class PregeneratedChest {
-    private ChestType type;
-    private ChestGeneration gen;
+    private __INVALID__ChestType type;
+    private __INVLAID__ChestGeneration gen;
     private List<ItemStack[]> pregen = new ArrayList<>();
 
-    public PregeneratedChest(ChestType type, ChestGeneration gen, int uses) {
+    public PregeneratedChest(__INVALID__ChestType type, __INVLAID__ChestGeneration gen, int uses) {
         this.type = type;
         this.gen = gen;
         gen(uses);
@@ -50,11 +50,11 @@ public class PregeneratedChest {
         return pregen.size();
     }
 
-    public ChestGeneration getGen() {
+    public __INVLAID__ChestGeneration getGen() {
         return gen;
     }
 
-    public ChestType getType() {
+    public __INVALID__ChestType getType() {
         return type;
     }
 
